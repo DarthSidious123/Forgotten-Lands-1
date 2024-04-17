@@ -10,8 +10,6 @@ public class Chunk : MonoBehaviour
 {
     public static readonly int Size = 16;
 
-    const int MaxWorldHeight = 512;
-
     private World world;
 
     [HideInInspector]

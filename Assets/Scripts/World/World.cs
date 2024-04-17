@@ -6,8 +6,9 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
-    public Vector2Int size;
+    //public Vector2Int size;
 
+    const int MaxWorldHeight = 512;
 
     [Header("FastNoise settings")]
     public List<Octaves> octaves = new List<Octaves>();
@@ -219,6 +220,7 @@ public class World : MonoBehaviour
 
                 yield return null;
 
+                
                 // +y
                 this.GenerateChunkIfInRange(new Vector3Int(0, i, j) + center);
                 this.GenerateChunkIfInRange(new Vector3Int(0, i, -j) + center);
@@ -242,7 +244,8 @@ public class World : MonoBehaviour
                 this.GenerateChunkIfInRange(new Vector3Int(-j, -i, -j) + center);
 
                 yield return null;
-
+                
+                
                 // +x
                 for (int k = 1; k < j; k++)
                 {
@@ -303,6 +306,7 @@ public class World : MonoBehaviour
                     yield return null;
                 }
 
+                
                 // +y
                 for (int k = 1; k < j; k++)
                 {
@@ -331,7 +335,10 @@ public class World : MonoBehaviour
                     this.GenerateChunkIfInRange(new Vector3Int(-j, -i, -k) + center);
 
                     yield return null;
+
                 }
+                
+                
             }
 
             yield return null;
@@ -397,15 +404,19 @@ public class World : MonoBehaviour
 
     public Chunk CreateChunk(Vector3Int coordinates)
     {
-        var chunkCoordinates = coordinates * Chunk.Size;
+        if(coordinates.y > -(MaxWorldHeight / Chunk.Size)) 
+        {
+            var chunkCoordinates = coordinates * Chunk.Size;
 
-        var obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
+            var obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
 
-        var chunk = obj.GetComponent<Chunk>();
-        chunk.coordinates = coordinates;
+            var chunk = obj.GetComponent<Chunk>();
+            chunk.coordinates = coordinates;
 
-        this.chunks.Add(coordinates, chunk);
+            this.chunks.Add(coordinates, chunk);
 
-        return chunk;
+            return chunk;
+        }
+        return null;
     }
 }

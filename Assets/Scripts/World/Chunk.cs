@@ -56,7 +56,7 @@ public class Chunk : MonoBehaviour
 
     void Start()
     {
-        this.renderer.material.mainTexture = this.world.itemTable.GetBlockAtlasTexture();
+        this.renderer.material.mainTexture = this.world.blockTable.GetBlockAtlasTexture();
 
         this.neighbours = new ChunkNeighbours(this.world, this.coordinates);
 
@@ -90,19 +90,25 @@ public class Chunk : MonoBehaviour
                     {
                         if (worldY == height)
                         {
-                            var block = this.world.itemTable.GetBlock("test:grass");
+                            var block = this.world.blockTable.GetBlock("grass");
                             this.SetBlock(new Vector3Int(x, y, z), block);
                         }
                         else if (worldY >= (height - 4))
                         {
-                            var block = this.world.itemTable.GetBlock("test:dirt");
+                            var block = this.world.blockTable.GetBlock("dirt");
+                            this.SetBlock(new Vector3Int(x, y, z), block);
+                        }
+                        else if(worldY <= (-480))
+                        {
+                            var block = this.world.blockTable.GetBlock("bedrock");
                             this.SetBlock(new Vector3Int(x, y, z), block);
                         }
                         else
                         {
-                            var block = this.world.itemTable.GetBlock("test:stone");
+                            var block = this.world.blockTable.GetBlock("stone");
                             this.SetBlock(new Vector3Int(x, y, z), block);
                         }
+
                     }
                 }
             }

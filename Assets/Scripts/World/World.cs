@@ -42,6 +42,7 @@ public class World : MonoBehaviour
     public int renderDistance = 5;
     public int viewDistance = 10;
     public ItemTableScriptableObject itemTable;
+    public BlockTableScriptableObject blockTable;
 
     public GameObject ChunkPrefab;
 
@@ -51,7 +52,7 @@ public class World : MonoBehaviour
 
     void Start()
     {
-        this.itemTable.GenerateTextureAtlas();
+        this.blockTable.GenerateTextureAtlas();
 
         this.lastPlayerChunk = this.WorldCoordinateToChunk(Player.main.transform.position);
 

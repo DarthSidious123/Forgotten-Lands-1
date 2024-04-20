@@ -816,7 +816,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9d3f0fefd09400c9d5bdb609b3b8ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 512, y: 512}
   octaves:
   - noiseType: 3
     frequency: 0
@@ -829,6 +828,7 @@ MonoBehaviour:
   renderDistance: 4
   viewDistance: 20
   itemTable: {fileID: 11400000, guid: 42cb2e6c15bca4e9fabdccb38d35c4c5, type: 2}
+  blockTable: {fileID: 11400000, guid: e86216db9d78a65449d557ba585f8239, type: 2}
   ChunkPrefab: {fileID: 8314088254131425182, guid: 89100dc351b6341a7960b7b590c5db9e,
     type: 3}
 --- !u!4 &1897090874

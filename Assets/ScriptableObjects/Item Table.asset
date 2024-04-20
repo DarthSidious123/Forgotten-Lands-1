@@ -21,7 +21,7 @@ MonoBehaviour:
     name: Dirt
     type: 1
     item: {fileID: 11400000, guid: 489dacaa4bf9b47f4b9b819b46fc5b21, type: 2}
-  - id: default
+  - id: test:default
     name: Default
     type: 1
     item: {fileID: 11400000, guid: ca5d3989df5d94503950864ce8505e1d, type: 2}
@@ -29,3 +29,7 @@ MonoBehaviour:
     name: Stone
     type: 1
     item: {fileID: 11400000, guid: 9ad3d182be02542a5ab25d0274031651, type: 2}
+  - id: test:bedrock
+    name: Bedrock
+    type: 1
+    item: {fileID: 11400000, guid: 0fde0150f14244141b989d0cac21c68b, type: 2}

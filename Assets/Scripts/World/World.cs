@@ -8,7 +8,7 @@ public class World : MonoBehaviour
 {
     //public Vector2Int size;
 
-    const int MaxWorldHeight = 512;
+    public const int MaxWorldHeight = 512;
 
     [Header("FastNoise settings")]
     public List<Octaves> octaves = new List<Octaves>();

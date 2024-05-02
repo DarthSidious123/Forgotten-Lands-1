@@ -9,6 +9,8 @@ public class World : MonoBehaviour
     //public Vector2Int size;
 
     public const int MaxWorldHeight = 512;
+    [Range(0.1f, 0.8f)]
+    public float CaveValue = 0.2f;
 
     [Header("FastNoise settings")]
     public List<Octaves> octaves = new List<Octaves>();
@@ -405,7 +407,7 @@ public class World : MonoBehaviour
 
     public Chunk CreateChunk(Vector3Int coordinates)
     {
-        if(coordinates.y > -(MaxWorldHeight / Chunk.Size)) 
+        if(coordinates.y >= -(MaxWorldHeight / Chunk.Size)) 
         {
             var chunkCoordinates = coordinates * Chunk.Size;
 

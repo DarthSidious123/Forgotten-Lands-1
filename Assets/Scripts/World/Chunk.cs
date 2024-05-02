@@ -86,7 +86,7 @@ public class Chunk : MonoBehaviour
                 {
                     var worldY = y + worldCoordinates.y;
 
-                    if (worldY <= height && this.world.Noise(worldX, worldZ, worldY) <= 0.3f)
+                    if (worldY >= 0 && worldY <= 128 && worldY <= height && this.world.Noise(worldX, worldZ, worldY) <= 0.3f)
                     {
                         if (worldY == height)
                         {
@@ -98,17 +98,26 @@ public class Chunk : MonoBehaviour
                             var block = this.world.blockTable.GetBlock("dirt");
                             this.SetBlock(new Vector3Int(x, y, z), block);
                         }
-                        else if(worldY <= (-480))
-                        {
-                            var block = this.world.blockTable.GetBlock("bedrock");
-                            this.SetBlock(new Vector3Int(x, y, z), block);
-                        }
-                        else
+                        else if (worldY <= (height - 4) && worldY > -512)
                         {
                             var block = this.world.blockTable.GetBlock("stone");
                             this.SetBlock(new Vector3Int(x, y, z), block);
                         }
+                    }
 
+                    if (worldY < 0 && worldY >= -511 && worldY <= height && this.world.Noise(worldX, worldZ, worldY) <= world.CaveValue)
+                    {
+                        if (worldY <= (height - 4) && worldY > -512)
+                        {
+                            var block = this.world.blockTable.GetBlock("stone");
+                            this.SetBlock(new Vector3Int(x, y, z), block);
+                        }
+                    }
+
+                    if (worldY == -512)
+                    {
+                        var block = this.world.blockTable.GetBlock("bedrock");
+                        this.SetBlock(new Vector3Int(x, y, z), block);
                     }
                 }
             }
@@ -265,65 +274,4 @@ public class Chunk : MonoBehaviour
         this.collider.sharedMesh = this.filter.mesh;
     }
 
-    /*
-    private bool[] CheckBlock(int x, int y, int z)
-    {
-        var max = Chunk.Size - 1;
-
-        var hasBack = (z > 0) ? (this.blocks[x, y, z - 1] == null) : (this.neighbours.front?.loaded == true && this.neighbours.front.blocks[x, y, max] == null);
-        var hasFront = (z < max) ? (this.blocks[x, y, z + 1] == null) : (this.neighbours.back?.loaded == true && this.neighbours.back.blocks[x, y, 0] == null);
-        var hasTop = (y < max) ? (this.blocks[x, y + 1, z] == null) : (this.neighbours.top?.loaded == true && this.neighbours.top.blocks[x, 0, z] == null);
-        var hasBottom = (y > 0) ? (this.blocks[x, y - 1, z] == null) : (this.neighbours.bottom?.loaded == true && this.neighbours.bottom.blocks[x, max, z] == null);
-        var hasLeft = (x > 0) ? (this.blocks[x - 1, y, z] == null) : (this.neighbours.right?.loaded == true && this.neighbours.right.blocks[max, y, z] == null);
-        var hasRight = (x < max) ? (this.blocks[x + 1, y, z] == null) : (this.neighbours.left?.loaded == true && this.neighbours.left.blocks[0, y, z] == null);
-
-        return new bool[] {
-            hasBack,
-            hasFront,
-            hasTop,
-            hasBottom,
-            hasLeft,
-            hasRight,
-        };
-    }
-    */
-
-     /*
-    private void GenerateBlock(BlockScriptableObject block, Vector3 position, bool[] checks)
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            if (checks[i])
-            {
-                this.vertices.Add(position + Cube.vertices[Cube.triangles[i, 0]]);
-                this.vertices.Add(position + Cube.vertices[Cube.triangles[i, 1]]);
-                this.vertices.Add(position + Cube.vertices[Cube.triangles[i, 2]]);
-                this.vertices.Add(position + Cube.vertices[Cube.triangles[i, 3]]);
-
-                this.triangles.Add(verticesIndex + 0);
-                this.triangles.Add(verticesIndex + 1);
-                this.triangles.Add(verticesIndex + 2);
-                this.triangles.Add(verticesIndex + 2);
-                this.triangles.Add(verticesIndex + 1);
-                this.triangles.Add(verticesIndex + 3);
-
-                var texture = block.rects[i];
-
-                this.uv.Add(new Vector2(texture.xMax, texture.yMin));
-                this.uv.Add(new Vector2(texture.xMax, texture.yMax));
-                this.uv.Add(new Vector2(texture.xMin, texture.yMin));
-                this.uv.Add(new Vector2(texture.xMin, texture.yMax));
-
-                this.verticesIndex += 4;
-            }
-        }
-    }
-     */
-    
-    /*
-    void OnDrawGizmos()
-    {
-        Gizmos.DrawWireCube(this.bounds.center, this.bounds.size);
-    }
-    */
 }

@@ -8,25 +8,18 @@ public class World : MonoBehaviour
 {
     //public Vector2Int size;
 
-    public const int MaxWorldHeight = 512;
+    public const int MaxWorldHeight = 32;
     [Range(0.1f, 0.8f)]
-    public float CaveValue = 0.2f;
+    public float caveValue = 0.3f;
 
     [Header("FastNoise settings")]
-    public List<Octaves> octaves = new List<Octaves>();
+    public List<FastNoise2DSettingsSO> noises2DSO;
+    public List<FastNoise3DSettingsSO> noises3DSO;
 
-    List<FastNoiseLite> noises = new List<FastNoiseLite>();
+    public List<FastNoiseLite> noises2D = new List<FastNoiseLite>();
+    public List<FastNoiseLite> noises3D = new List<FastNoiseLite>();
 
 
-    [Serializable]
-    public class Octaves
-    {
-        public FastNoiseLite.NoiseType noiseType = FastNoiseLite.NoiseType.Perlin;
-        public float frequency, amplitude;
-
-        public List<FastNoiseLite> noises = new List<FastNoiseLite>();
-
-    }
 
 
     [Header("World Gen - Noise")]
@@ -51,6 +44,16 @@ public class World : MonoBehaviour
     public Dictionary<Vector3Int, Chunk> chunks = new Dictionary<Vector3Int, Chunk>();
 
     private Vector3Int lastPlayerChunk;
+
+
+
+
+
+    void Awake()
+    {
+        UsingFastNoiseLite2D();
+        UsingFastNoiseLite3D();
+    }
 
     void Start()
     {
@@ -78,17 +81,36 @@ public class World : MonoBehaviour
 
 
 
-    public void TestUsingFastNoiseLite()
+
+
+
+    //
+    //
+    //
+    public void UsingFastNoiseLite2D()
     {
-        foreach(var octave in octaves)
+        foreach(var noise2D in noises2DSO)
         {
             var noise = new FastNoiseLite((int)seed);
-            noise.SetNoiseType(octave.noiseType);
-            noise.SetFrequency(octave.frequency);
-            noises.Add(noise);
+            noise.SetNoiseType(noise2D.noiseType);
+            noise.SetFrequency(noise2D.frequency);
+            noises2D.Add(noise);
         }
     }
 
+    public void UsingFastNoiseLite3D()
+    {
+        foreach (var noise3D in noises3DSO)
+        {
+            var noise = new FastNoiseLite((int)seed);
+            noise.SetNoiseType(noise3D.noiseType);
+            noise.SetFrequency(noise3D.frequency);
+            noises3D.Add(noise);
+        }
+    }
+    //
+    //
+    //
 
 
 

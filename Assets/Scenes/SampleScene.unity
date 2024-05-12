@@ -298,9 +298,9 @@ Canvas:
   m_GameObject: {fileID: 348749158}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_RenderMode: 1
+  m_Camera: {fileID: 963194227}
+  m_PlaneDistance: 0.55
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -310,7 +310,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 0
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!224 &348749162
 RectTransform:
@@ -348,7 +348,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &519331112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,7 +356,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519331111}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9298d3dbdc2749b39d81229bc658c55, type: 3}
   m_Name: 
@@ -488,7 +488,7 @@ Light:
   m_InnerSpotAngle: 21.802082
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -816,16 +816,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9d3f0fefd09400c9d5bdb609b3b8ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CaveValue: 0.3
-  octaves:
-  - noiseType: 3
-    frequency: 0
-    amplitude: 0
+  caveValue: 0.3
+  noises2DSO:
+  - {fileID: 11400000, guid: 699c0f7988c1d8d49b1e5e282d188999, type: 2}
+  noises3DSO:
+  - {fileID: 11400000, guid: 47d5c55f6832a4643a32afde27f4089c, type: 2}
   noiseScale: 32
   worldSeed: 1234
   seed: 0
   minimumSeeLevel: 10
-  maximumLandHeight: 60
+  maximumLandHeight: 20
   renderDistance: 4
   viewDistance: 20
   itemTable: {fileID: 11400000, guid: 42cb2e6c15bca4e9fabdccb38d35c4c5, type: 2}

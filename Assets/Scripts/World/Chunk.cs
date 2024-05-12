@@ -68,24 +68,69 @@ public class Chunk : MonoBehaviour
         // this.FrustrumCulling();
     }
 
+
     public void Init()
     {
         var worldCoordinates = this.coordinates * Chunk.Size;
 
         for (int x = 0; x < Chunk.Size; x++)
         {
-            var worldX = x + worldCoordinates.x;
+            var worldX = x  + worldCoordinates.x;
 
             for (int z = 0; z < Chunk.Size; z++)
             {
                 var worldZ = z + worldCoordinates.z;
 
-                var height = Mathf.FloorToInt(this.world.Noise(worldX, worldZ) * this.world.maximumLandHeight) + this.world.minimumSeeLevel;
+
+
+                int height2D = Mathf.FloorToInt(
+                    ( (world.noises2D[0].GetNoise(worldX, worldZ) + 1) / 2) * world.noises2DSO[0].amplitude * world.maximumLandHeight
+                    + world.minimumSeeLevel);
+
 
                 for (int y = 0; y < Chunk.Size; y++)
                 {
                     var worldY = y + worldCoordinates.y;
 
+                    int height3D = Mathf.FloorToInt(
+                        ((world.noises3D[0].GetNoise(worldX, worldY, worldZ) + 1) / 2) / 32 * world.noises3DSO[0].amplitude
+                        * world.maximumLandHeight + world.minimumSeeLevel);
+
+                    if (worldY == height2D /*&& worldY <= height3D * world.caveValue*/)
+                    {
+                        var block = this.world.blockTable.GetBlock("grass");
+                        this.SetBlock(new Vector3Int(x, y, z), block);
+                    }
+
+                    else if ( (worldY < height2D) && worldY >= (height2D - 4) /*&& worldY <= height3D * world.caveValue*/)
+                    {
+                        var block = this.world.blockTable.GetBlock("dirt");
+                        this.SetBlock(new Vector3Int(x, y, z), block);
+                    }
+
+                    else if (worldY <= (height2D - 4) && (worldY > -World.MaxWorldHeight) /*&& worldY <= height3D * world.caveValue*/)
+                    {
+                        var block = this.world.blockTable.GetBlock("stone");
+                        this.SetBlock(new Vector3Int(x, y, z), block);
+                    }
+
+                    else if ((worldY == -World.MaxWorldHeight))
+                    {
+                        var block = this.world.blockTable.GetBlock("bedrock");
+                        this.SetBlock(new Vector3Int(x, y, z), block);
+                    }
+                }
+
+
+                /*
+                int height = Mathf.FloorToInt(this.world.Noise(worldX, worldZ) * this.world.maximumLandHeight) + this.world.minimumSeeLevel;
+
+
+
+                for (int y = 0; y < Chunk.Size; y++)
+                {
+                    var worldY = y + worldCoordinates.y;
+                    
                     if (worldY >= 0 && worldY <= 128 && worldY <= height && this.world.Noise(worldX, worldZ, worldY) <= 0.3f)
                     {
                         if (worldY == height)
@@ -113,13 +158,16 @@ public class Chunk : MonoBehaviour
                             this.SetBlock(new Vector3Int(x, y, z), block);
                         }
                     }
+                    
 
                     if (worldY == -512)
                     {
                         var block = this.world.blockTable.GetBlock("bedrock");
                         this.SetBlock(new Vector3Int(x, y, z), block);
                     }
+                
                 }
+                */
             }
         }
 

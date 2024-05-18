@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noiseType: 3
   frequency: 0.5
-  amplitude: 0.5
+  amplitude: 0.2

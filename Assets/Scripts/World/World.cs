@@ -9,8 +9,8 @@ public class World : MonoBehaviour
     //public Vector2Int size;
 
     public const int MaxWorldHeight = 32;
-    [Range(0.1f, 0.8f)]
-    public float caveValue = 0.3f;
+    [Range(0f, 20f)]
+    public float caveValue = 0.3f, caveValue2 = 1f, caveValue3 = 0f;
 
     [Header("FastNoise settings")]
     public List<FastNoise2DSettingsSO> noises2DSO;

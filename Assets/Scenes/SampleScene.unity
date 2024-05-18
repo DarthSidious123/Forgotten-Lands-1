@@ -817,6 +817,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   caveValue: 0.3
+  caveValue2: 0
+  caveValue3: 0
   noises2DSO:
   - {fileID: 11400000, guid: 699c0f7988c1d8d49b1e5e282d188999, type: 2}
   noises3DSO:

@@ -93,7 +93,7 @@ public class Chunk : MonoBehaviour
                     var worldY = y + worldCoordinates.y;
 
                     int height3D = Mathf.FloorToInt(
-                        ((world.noises3D[0].GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.noises3DSO[0].amplitude * world.caveValue2 + world.caveValue3);
+                        ((world.noises3D[0].GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.noises3DSO[0].amplitude);
 
 
 

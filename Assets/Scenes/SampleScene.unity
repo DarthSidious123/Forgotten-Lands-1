@@ -816,13 +816,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9d3f0fefd09400c9d5bdb609b3b8ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caveValue: 0.3
-  caveValue2: 0
-  caveValue3: 0
+  caveValue: 36
   noises2DSO:
   - {fileID: 11400000, guid: 699c0f7988c1d8d49b1e5e282d188999, type: 2}
   noises3DSO:
   - {fileID: 11400000, guid: 47d5c55f6832a4643a32afde27f4089c, type: 2}
+  CaveSettingsList:
+  - caveValue: 36
+    noise3D: {fileID: 11400000, guid: 47d5c55f6832a4643a32afde27f4089c, type: 2}
   noiseScale: 32
   worldSeed: 1234
   seed: 0

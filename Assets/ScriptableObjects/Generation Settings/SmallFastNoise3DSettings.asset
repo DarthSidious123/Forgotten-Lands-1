@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 954b6de447bc0614f925283863cab535, type: 3}
-  m_Name: FastNoise3DSettings
+  m_Name: SmallFastNoise3DSettings
   m_EditorClassIdentifier: 
   noiseType: 3
-  frequency: 0.5
-  amplitude: 0.2
+  frequency: 0.05
+  amplitude: 50

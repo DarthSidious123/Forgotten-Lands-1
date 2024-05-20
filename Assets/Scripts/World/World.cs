@@ -16,9 +16,26 @@ public class World : MonoBehaviour
     public List<FastNoise2DSettingsSO> noises2DSO;
     public List<FastNoise3DSettingsSO> noises3DSO;
 
+    [Space(10)]
+
+    public List<CaveSettings> CaveSettingsList;
+
+
     public List<FastNoiseLite> noises2D = new List<FastNoiseLite>();
     public List<FastNoiseLite> noises3D = new List<FastNoiseLite>();
 
+
+
+    [Serializable]
+    public class CaveSettings
+    {
+        [Range(0f, 100f)]
+        public float caveValue = 0.3f;
+
+        [Space(10)]
+
+        public FastNoise3DSettingsSO noise3D;
+    }
 
 
 
@@ -98,8 +115,10 @@ public class World : MonoBehaviour
         }
     }
 
+    /*
     public void UsingFastNoiseLite3D()
     {
+        
         foreach (var noise3D in noises3DSO)
         {
             var noise = new FastNoiseLite((int)seed);
@@ -107,7 +126,21 @@ public class World : MonoBehaviour
             noise.SetFrequency(noise3D.frequency);
             noises3D.Add(noise);
         }
+        
     }
+    */
+
+    public void UsingFastNoiseLite3D()
+    {
+        foreach (var noise3D in CaveSettingsList)
+        {
+            var noise = new FastNoiseLite((int)seed);
+            noise.SetNoiseType(noise3D.noise3D.noiseType);
+            noise.SetFrequency(noise3D.noise3D.frequency);
+            noises3D.Add(noise);
+        }
+    }
+
     //
     //
     //

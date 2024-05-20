@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: BigFastNoise3DSettings
   m_EditorClassIdentifier: 
   noiseType: 3
-  frequency: 0.025
-  amplitude: 75
+  frequency: 0.01
+  amplitude: 85

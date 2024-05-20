@@ -9,12 +9,9 @@ public class World : MonoBehaviour
     //public Vector2Int size;
 
     public const int MaxWorldHeight = 32;
-    [Range(0f, 100f)]
-    public float caveValue = 0.3f;
 
     [Header("FastNoise settings")]
     public List<FastNoise2DSettingsSO> noises2DSO;
-    public List<FastNoise3DSettingsSO> noises3DSO;
 
     [Space(10)]
 
@@ -462,7 +459,7 @@ public class World : MonoBehaviour
 
     public Chunk CreateChunk(Vector3Int coordinates)
     {
-        if(coordinates.y >= -(MaxWorldHeight / Chunk.Size)) 
+        if(coordinates.y >= -(MaxWorldHeight / Chunk.Size) && coordinates.y <= (MaxWorldHeight / Chunk.Size)) 
         {
             var chunkCoordinates = coordinates * Chunk.Size;
 

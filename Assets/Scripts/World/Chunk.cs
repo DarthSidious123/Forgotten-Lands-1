@@ -5,6 +5,7 @@ using System.Linq;
 using System;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEditor.Experimental.GraphView;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshCollider))]
 public class Chunk : MonoBehaviour
@@ -83,8 +84,17 @@ public class Chunk : MonoBehaviour
                 int worldZ = z + worldCoordinates.z;
 
 
-                int height2D = Mathf.FloorToInt(
-                ((world.noises2D[0].GetNoise(worldX, worldZ) + 1) / 2) * world.noises2DSO[0].amplitude * world.maximumLandHeight + world.minimumSeeLevel);
+                List<int> heights2D = new List<int>();
+
+                for (int noise2d = 0; noise2d < world.noises2D.Count; noise2d++)
+                {
+                    int height2D = Mathf.FloorToInt(
+                    ((world.noises2D[0].GetNoise(worldX, worldZ) + 1) / 2) * world.terrainSettingsList[0].amplitude * world.maximumLandHeight
+                    + world.minimumSeeLevel);
+
+                    heights2D.Add(height2D);
+                }
+
 
 
                 for (int y = 0; y < Chunk.Size; y++)
@@ -92,41 +102,40 @@ public class Chunk : MonoBehaviour
 
                     int worldY = y + worldCoordinates.y;
 
+
                     List<int> heights3D = new List<int>();
 
-
-                    for (int noise = 0; noise < world.noises3D.Count; noise++)
+                    for (int noise3d = 0; noise3d < world.noises3D.Count; noise3d++)
                     {
-
                         int height3D = Mathf.FloorToInt(
-                            ((world.noises3D[noise].GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.CaveSettingsList[noise].noise3D.amplitude);
-
+                            ((world.noises3D[noise3d].GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.caveSettingsList[noise3d].amplitude);
 
                         heights3D.Add(height3D);
-
                     }
 
                     bool allHeights3D = false;
-                    if (heights3D[0] <= world.CaveSettingsList[0].caveValue && heights3D[1] <= world.CaveSettingsList[1].caveValue)
+                    if (heights3D[0] <= world.caveSettingsList[0].caveTolerancy &&
+                        heights3D[1] <= world.caveSettingsList[1].caveTolerancy &&
+                        heights3D[2] <= world.caveSettingsList[2].caveTolerancy)
                     {
                         allHeights3D = true;
                     }
 
 
 
-                    if (worldY == height2D && allHeights3D)
+                    if (worldY == heights2D[0] && allHeights3D)
                     {
                         var block = this.world.blockTable.GetBlock("grass");
                         this.SetBlock(new Vector3Int(x, y, z), block);
                     }
 
-                    else if ((worldY < height2D) && worldY >= (height2D - 4) && allHeights3D)
+                    else if ((worldY < heights2D[0]) && worldY >= (heights2D[0] - 4) && allHeights3D)
                     {
                         var block = this.world.blockTable.GetBlock("dirt");
                         this.SetBlock(new Vector3Int(x, y, z), block);
                     }
 
-                    else if (worldY <= (height2D - 4) && (worldY > -World.MaxWorldHeight) && allHeights3D)
+                    else if (worldY <= (heights2D[0] - 4) && (worldY > -World.MaxWorldHeight) && allHeights3D)
                     {
                         var block = this.world.blockTable.GetBlock("stone");
                         this.SetBlock(new Vector3Int(x, y, z), block);

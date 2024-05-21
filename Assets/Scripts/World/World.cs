@@ -11,28 +11,21 @@ public class World : MonoBehaviour
     public const int MaxWorldHeight = 32;
 
     [Header("FastNoise settings")]
-    public List<FastNoise2DSettingsSO> noises2DSO;
+    [Header("Terrain settings")]
+
+    public List<FastNoise2DSettingsSO> terrainSettingsList;
+
 
     [Space(10)]
 
-    public List<CaveSettings> CaveSettingsList;
+
+    [Header("Cave settings")]
+
+    public List<FastNoise3DSettingsSO> caveSettingsList;
 
 
     public List<FastNoiseLite> noises2D = new List<FastNoiseLite>();
     public List<FastNoiseLite> noises3D = new List<FastNoiseLite>();
-
-
-
-    [Serializable]
-    public class CaveSettings
-    {
-        [Range(0f, 100f)]
-        public float caveValue = 0.3f;
-
-        [Space(10)]
-
-        public FastNoise3DSettingsSO noise3D;
-    }
 
 
 
@@ -103,7 +96,7 @@ public class World : MonoBehaviour
     //
     public void UsingFastNoiseLite2D()
     {
-        foreach(var noise2D in noises2DSO)
+        foreach(var noise2D in terrainSettingsList)
         {
             var noise = new FastNoiseLite((int)seed);
             noise.SetNoiseType(noise2D.noiseType);
@@ -112,28 +105,13 @@ public class World : MonoBehaviour
         }
     }
 
-    /*
     public void UsingFastNoiseLite3D()
     {
-        
-        foreach (var noise3D in noises3DSO)
+        foreach (var noise3D in caveSettingsList)
         {
             var noise = new FastNoiseLite((int)seed);
             noise.SetNoiseType(noise3D.noiseType);
             noise.SetFrequency(noise3D.frequency);
-            noises3D.Add(noise);
-        }
-        
-    }
-    */
-
-    public void UsingFastNoiseLite3D()
-    {
-        foreach (var noise3D in CaveSettingsList)
-        {
-            var noise = new FastNoiseLite((int)seed);
-            noise.SetNoiseType(noise3D.noise3D.noiseType);
-            noise.SetFrequency(noise3D.noise3D.frequency);
             noises3D.Add(noise);
         }
     }

@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "FastNoise Settings/2D")]
 public class FastNoise2DSettingsSO : FastNoiseSettingsSO
 {
-
+    [Range(0, 100)]
+    public int minimumSeeLevel = 10, maximumLandHeight = 20;
 }

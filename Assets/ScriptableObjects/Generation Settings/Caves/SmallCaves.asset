@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 954b6de447bc0614f925283863cab535, type: 3}
-  m_Name: SmallFastNoise3DSettings
+  m_Name: SmallCaves
   m_EditorClassIdentifier: 
   noiseType: 3
   frequency: 0.05
-  amplitude: 50
+  amplitude: 18
+  caveTolerancy: 12.5

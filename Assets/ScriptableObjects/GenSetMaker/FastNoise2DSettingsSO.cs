@@ -6,5 +6,5 @@ using UnityEngine;
 public class FastNoise2DSettingsSO : FastNoiseSettingsSO
 {
     [Range(0, 100)]
-    public int minimumSeeLevel = 10, maximumLandHeight = 20;
+    public int maximumHeight = 20, scale = 50;
 }

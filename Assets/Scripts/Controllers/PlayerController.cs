@@ -36,6 +36,67 @@ public class PlayerController : MonoBehaviour
         this.velocity += Vector3.up * (Input.GetAxisRaw("Jump") - Input.GetAxisRaw("Duck"));
         this.velocity *= this.speed * Time.deltaTime * 10.0f;
 
+        SetBlock();
+
+
+
+    }
+
+    void FixedUpdate()
+    {
+        var targetVelocity = velocity;
+
+        this.rigidbody.velocity = Vector3.SmoothDamp(this.rigidbody.velocity, targetVelocity, ref targetVelocity, this.movementSmoothing);
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * this.breakDistance);
+    }
+
+    public void SetBlock()
+    {
+
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+        {
+            Vector3Int blockCoord = this.world.WorldCoordinateToBlock(camera.transform.position);
+            Vector3Int chunkCoord = this.world.WorldCoordinateToChunk(camera.transform.position);
+
+            Chunk currentChunk = world.chunks[chunkCoord];
+
+            Physics.Raycast(camera.transform.position, camera.transform.forward, out var hit);
+
+            Chunk chunk = hit.collider.GetComponent<Chunk>();
+
+            Vector3 coordinates = new Vector3();
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                coordinates = hit.point + -hit.normal / 2;
+
+                int x = Mathf.RoundToInt(coordinates.x) % 16;
+                int y = Mathf.RoundToInt(coordinates.y) % 16;
+                int z = Mathf.RoundToInt(coordinates.z) % 16;
+
+                chunk.ResetBlock(new Vector3Int(x, y, z), world.blockTable.GetBlock("air"));
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                coordinates = hit.point + hit.normal / 2;
+            }
+
+            //chunk.BreakBlock(new Vector3Int(x, y, z));
+        }
+
+
+    }
+
+
+
+
+    public void BreackBlock()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             var blockCoordinates = this.world.WorldCoordinateToBlock(camera.transform.position);
@@ -62,18 +123,5 @@ public class PlayerController : MonoBehaviour
                 chunk.BreakBlock(new Vector3Int(x, y, z));
             }
         }
-    }
-
-    void FixedUpdate()
-    {
-        var targetVelocity = velocity;
-
-        this.rigidbody.velocity = Vector3.SmoothDamp(this.rigidbody.velocity, targetVelocity, ref targetVelocity, this.movementSmoothing);
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.magenta;
-        Gizmos.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * this.breakDistance);
     }
 }

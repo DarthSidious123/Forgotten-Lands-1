@@ -22,7 +22,86 @@ public class GenerateBlock
         var hasLeft = (x > 0) ? (chunk.blocks[x - 1, y, z] == null) : (chunk.neighbours.right?.loaded == true && chunk.neighbours.right.blocks[max, y, z] == null);
         var hasRight = (x < max) ? (chunk.blocks[x + 1, y, z] == null) : (chunk.neighbours.left?.loaded == true && chunk.neighbours.left.blocks[0, y, z] == null);
 
-        return new bool[] {
+
+        bool myHasBack;
+        if (z > 0)
+        {
+            myHasBack = (chunk.blocks[x, y, z - 1] == null || chunk.blocks[x, y, z - 1] == !chunk.world.blockTable.GetBlock("air"));
+        }
+        else
+        {
+            myHasBack = (chunk.neighbours.front?.loaded == true && chunk.neighbours.front.blocks[x, y, max] == null);
+        }
+
+
+        bool myHasFront;
+        if (z < max)
+        {
+            myHasFront = (chunk.blocks[x, y, z + 1] == null || chunk.blocks[x, y, z + 1] == !chunk.world.blockTable.GetBlock("air"));
+        }
+        else
+        {
+            myHasFront = (chunk.neighbours.back?.loaded == true && chunk.neighbours.back.blocks[x, y, 0] == null);
+        }
+
+
+        bool myHasTop;
+        if (y < max)
+        {
+            myHasTop = (chunk.blocks[x, y + 1, z] == null || chunk.blocks[x, y + 1, z] == !chunk.world.blockTable.GetBlock("air"));
+        }
+        else
+        {
+            myHasTop = (chunk.neighbours.top?.loaded == true && chunk.neighbours.top.blocks[x, 0, z] == null);
+        }
+
+
+        bool myHasBottom;
+        if (y > 0)
+        {
+            myHasBottom = (chunk.blocks[x, y - 1, z] == null || chunk.blocks[x, y - 1, z] == !chunk.world.blockTable.GetBlock("air"));
+        }
+        else
+        {
+            myHasBottom = (chunk.neighbours.bottom?.loaded == true && chunk.neighbours.bottom.blocks[x, max, z] == null);
+        }
+
+        bool myHasLeft;
+        if (x > 0)
+        {
+            myHasLeft = (chunk.blocks[x - 1, y, z] == null || chunk.blocks[x - 1, y, z] == !chunk.world.blockTable.GetBlock("air"));
+        }
+        else
+        {
+            myHasLeft = (chunk.neighbours.right?.loaded == true && chunk.neighbours.right.blocks[max, y, z] == null);
+        }
+
+        bool myHasRight;
+        if (x < max)
+        {
+            myHasRight = (chunk.blocks[x + 1, y, z] == null || chunk.blocks[x + 1, y, z] == !chunk.world.blockTable.GetBlock("air"));
+        }
+        else
+        {
+            myHasRight = (chunk.neighbours.left?.loaded == true && chunk.neighbours.left.blocks[0, y, z] == null);
+        }
+
+        return new bool[]
+        {
+            myHasBack,
+            myHasFront,
+            myHasTop,
+            myHasBottom,
+            myHasLeft,
+            myHasRight,
+        };
+
+
+
+
+
+        return new bool[]
+        {
             hasBack,
             hasFront,
             hasTop,

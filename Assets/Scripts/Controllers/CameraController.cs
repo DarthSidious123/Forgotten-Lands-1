@@ -34,5 +34,12 @@ public class CameraController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            this.active = true;
+
+            Cursor.lockState= CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 }

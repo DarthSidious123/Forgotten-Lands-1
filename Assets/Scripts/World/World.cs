@@ -8,25 +8,40 @@ public class World : MonoBehaviour
 {
     //public Vector2Int size;
 
-    public const int MaxWorldHeight = 32;
+    public const int MaxWorldHeight = 128;
 
-    [Header("FastNoise settings")]
-    [Header("Terrain settings")]
 
-    public List<FastNoise2DSettingsSO> terrainSettingsList;
+    [Header("Biome Maps settings")]
 
+    public float biomeFrequency = 0.01f, biomeAmplitude = 10f;
+    public FastNoiseLite.NoiseType biomeNoiseType = FastNoiseLite.NoiseType.Perlin;
+
+    [HideInInspector]
+    public float sumBiomeProbalitiy = 0;
+
+    public FastNoiseLite landscapeMap, temperatureMap, wetMap;
 
     [Space(10)]
 
+    [Header("Biome settings")]
+
+    public List<FastNoise2DSettingsSO> landscapeSettingsList;
+
+    [Space(10)]
 
     [Header("Cave settings")]
 
     public List<FastNoise3DSettingsSO> caveSettingsList;
+    public bool generateCaves = true;
+
+    [Space(10)]
 
 
     public List<FastNoiseLite> noises2D = new List<FastNoiseLite>();
     public List<FastNoiseLite> noises3D = new List<FastNoiseLite>();
 
+
+ 
 
 
     [Header("World Gen - Noise")]
@@ -58,8 +73,11 @@ public class World : MonoBehaviour
 
     void Awake()
     {
-        UsingFastNoiseLite2D();
-        UsingFastNoiseLite3D();
+        SumBiomeProbability();
+
+        CreateFastNoiseLite2D();
+        CreateFastNoiseLite3D();
+        CreateTerrainMap2D();
     }
 
     void Start()
@@ -94,27 +112,50 @@ public class World : MonoBehaviour
     //
     //
     //
-    public void UsingFastNoiseLite2D()
+
+    void SumBiomeProbability()
     {
-        foreach(var noise2D in terrainSettingsList)
+        foreach (var biome in landscapeSettingsList)
         {
-            var noise = new FastNoiseLite((int)seed);
-            noise.SetNoiseType(noise2D.noiseType);
-            noise.SetFrequency(noise2D.frequency);
-            noises2D.Add(noise);
+            sumBiomeProbalitiy += biome.probability;
         }
     }
 
-    public void UsingFastNoiseLite3D()
+    void CreateTerrainMap2D()
+    {
+        landscapeMap = new FastNoiseLite((int)seed);
+
+        landscapeMap.SetNoiseType(biomeNoiseType);
+        landscapeMap.SetFrequency(biomeFrequency);
+    }
+
+    void CreateFastNoiseLite2D()
+    {
+        foreach (var noise2D in landscapeSettingsList)
+        {
+            var noise = new FastNoiseLite((int)seed);
+
+            noise.SetNoiseType(noise2D.noiseType);
+            noise.SetFrequency(noise2D.frequency);
+
+            noises2D.Add(noise);
+        }
+
+    }
+    
+    void CreateFastNoiseLite3D()
     {
         foreach (var noise3D in caveSettingsList)
         {
+            
             var noise = new FastNoiseLite((int)seed);
             noise.SetNoiseType(noise3D.noiseType);
             noise.SetFrequency(noise3D.frequency);
             noises3D.Add(noise);
+            
         }
     }
+    
 
     //
     //

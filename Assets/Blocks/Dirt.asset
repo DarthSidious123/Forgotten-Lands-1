@@ -18,39 +18,39 @@ MonoBehaviour:
   sprite: {fileID: 0}
   rects:
   - serializedVersion: 2
-    x: 0.75
-    y: 0.25
+    x: 0.25
+    y: 0
     width: 0.25
-    height: 0.25
+    height: 0.5
   - serializedVersion: 2
-    x: 0.75
-    y: 0.25
+    x: 0.25
+    y: 0
     width: 0.25
-    height: 0.25
+    height: 0.5
   - serializedVersion: 2
-    x: 0.75
-    y: 0.25
+    x: 0.25
+    y: 0
     width: 0.25
-    height: 0.25
+    height: 0.5
   - serializedVersion: 2
-    x: 0.75
-    y: 0.25
+    x: 0.25
+    y: 0
     width: 0.25
-    height: 0.25
+    height: 0.5
   - serializedVersion: 2
-    x: 0.75
-    y: 0.25
+    x: 0.25
+    y: 0
     width: 0.25
-    height: 0.25
+    height: 0.5
   - serializedVersion: 2
-    x: 0.75
-    y: 0.25
+    x: 0.25
+    y: 0
     width: 0.25
-    height: 0.25
+    height: 0.5
   restistance: 1
-  back: {fileID: 2800000, guid: 441f134d063dd4d25a31ed2abd5bc25d, type: 3}
-  front: {fileID: 2800000, guid: 441f134d063dd4d25a31ed2abd5bc25d, type: 3}
-  top: {fileID: 2800000, guid: 441f134d063dd4d25a31ed2abd5bc25d, type: 3}
-  bottom: {fileID: 2800000, guid: 441f134d063dd4d25a31ed2abd5bc25d, type: 3}
-  left: {fileID: 2800000, guid: 441f134d063dd4d25a31ed2abd5bc25d, type: 3}
-  right: {fileID: 2800000, guid: 441f134d063dd4d25a31ed2abd5bc25d, type: 3}
+  back: {fileID: 2800000, guid: d58397bff7fe30e449b1414b0c6fefd1, type: 3}
+  front: {fileID: 2800000, guid: d58397bff7fe30e449b1414b0c6fefd1, type: 3}
+  top: {fileID: 2800000, guid: d58397bff7fe30e449b1414b0c6fefd1, type: 3}
+  bottom: {fileID: 2800000, guid: d58397bff7fe30e449b1414b0c6fefd1, type: 3}
+  left: {fileID: 2800000, guid: d58397bff7fe30e449b1414b0c6fefd1, type: 3}
+  right: {fileID: 2800000, guid: d58397bff7fe30e449b1414b0c6fefd1, type: 3}

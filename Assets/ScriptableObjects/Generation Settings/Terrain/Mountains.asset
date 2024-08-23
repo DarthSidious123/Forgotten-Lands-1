@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   probability: 0.5
   noiseType: 3
-  frequency: 0.001
-  amplitude: 20
+  frequency: 0.0025
+  amplitude: 45
   octaves: 3
   maximumHeight: 1
   scale: 50

@@ -13,7 +13,8 @@ public class World : MonoBehaviour
 
     [Header("Biome Maps settings")]
 
-    public float biomeFrequency = 0.01f, biomeAmplitude = 10f;
+    public float biomeFrequency = 0.01f;
+    public float biomeAmplitude = 10f;
     public FastNoiseLite.NoiseType biomeNoiseType = FastNoiseLite.NoiseType.Perlin;
 
     [HideInInspector]
@@ -23,7 +24,7 @@ public class World : MonoBehaviour
 
     [Space(10)]
 
-    [Header("Biome settings")]
+    [Header("Landscape settings")]
 
     public List<FastNoise2DSettingsSO> landscapeSettingsList;
 

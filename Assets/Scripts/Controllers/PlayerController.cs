@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour
             Chunk chunk = hit.collider.GetComponent<Chunk>();
 
             Vector3 coordinates = new Vector3();
+            Vector3Int coordinatesInt = new Vector3Int();
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -79,7 +80,10 @@ public class PlayerController : MonoBehaviour
                 int y = Mathf.RoundToInt(coordinates.y) % 16;
                 int z = Mathf.RoundToInt(coordinates.z) % 16;
 
-                chunk.ResetBlock(new Vector3Int(x, y, z), world.blockTable.GetBlock("air"));
+                coordinatesInt.x = x; coordinatesInt.y = y; coordinatesInt.z = z;
+
+                //chunk.ResetBlock(new Vector3Int(x, y, z), world.blockTable.GetBlock("air"));
+                chunk.BreakBlock(coordinatesInt);
             }
             if (Input.GetMouseButtonDown(1))
             {

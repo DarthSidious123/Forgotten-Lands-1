@@ -101,9 +101,11 @@ public class Chunk : MonoBehaviour
                 int landscapeHeight = 0;
                 List<int> heights2D = new List<int>();
 
-
+                
                 float landscapeValue = GetLandscapeNoise(worldX, worldZ);
 
+                
+                
                 if (landscapeValue < 0.5f)
                 {
                     landscapeHeight = GetHeight2D(0, worldX, worldZ);
@@ -112,8 +114,9 @@ public class Chunk : MonoBehaviour
                 {
                     landscapeHeight = GetHeight2D(1, worldX, worldZ);
                 }
+                
 
-
+                //landscapeHeight = GetHeight2D(0, worldX, worldZ);
 
 
 
@@ -143,43 +146,26 @@ public class Chunk : MonoBehaviour
 
 
                     //3D Noises
-                    List<int> heights3D = new List<int>();
 
-                    
-                    for (int noise3d = 0; noise3d < world.noises3D.Count; noise3d++)
-                    {
-                        int height3D = Mathf.FloorToInt(
-                            ((world.noises3D[noise3d].GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.caveSettingsList[noise3d].amplitude);
-
-                        heights3D.Add(height3D);
-                    }
-
-                    bool allHeights3D = false;
-
-                    if (heights3D[0] <= world.caveSettingsList[0].caveTolerancy &&
-                        heights3D[1] <= world.caveSettingsList[1].caveTolerancy &&
-                        heights3D[2] <= world.caveSettingsList[2].caveTolerancy)
-                    {
-                        allHeights3D = true;
-                    }
+                    bool checkCaves = CheckCaves(worldY, worldX, worldZ);
                     
                     //
 
 
 
-                    if (worldY == landscapeHeight && allHeights3D)
+                    if (worldY == landscapeHeight && checkCaves)
                     {
                         var block = this.world.blockTable.GetBlock("grass");
                         this.SetBlock(new Vector3Int(x, y, z), block);
                     }
 
-                    else if ((worldY < landscapeHeight) && worldY >= (landscapeHeight - 4) && allHeights3D)
+                    else if ((worldY < landscapeHeight) && worldY >= (landscapeHeight - 4) && checkCaves)
                     {
                         var block = this.world.blockTable.GetBlock("dirt");
                         this.SetBlock(new Vector3Int(x, y, z), block);
                     }
 
-                    else if (worldY <= (landscapeHeight - 4) && (worldY > -World.MaxWorldHeight) && allHeights3D)
+                    else if (worldY <= (landscapeHeight - 4) && (worldY > -World.MaxWorldHeight) && checkCaves)
                     {
                         var block = this.world.blockTable.GetBlock("stone");
                         this.SetBlock(new Vector3Int(x, y, z), block);
@@ -190,19 +176,6 @@ public class Chunk : MonoBehaviour
                         var block = this.world.blockTable.GetBlock("bedrock");
                         this.SetBlock(new Vector3Int(x, y, z), block);
                     }
-
-
-
-
-
-
-
-
-
-
-
-
-
                 }
             }
         }
@@ -216,17 +189,18 @@ public class Chunk : MonoBehaviour
 
     int GetHeight2D(int count, int worldX, int worldZ)
     {
-        float landscapeHeight = 0;
+        float height2D = 0;
 
         float noiseValue = world.noises2D[count].GetNoise(
             worldX * world.landscapeSettingsList[count].scale,
             worldZ * world.landscapeSettingsList[count].scale);
 
-        landscapeHeight = (noiseValue + 1) / 2 * world.landscapeSettingsList[count].amplitude
+        height2D = (noiseValue + 1) / 2 * world.landscapeSettingsList[count].amplitude
             * world.landscapeSettingsList[count].maximumHeight + world.minimumSeeLevel;
 
-        return Mathf.FloorToInt(landscapeHeight);
+        return Mathf.FloorToInt(height2D);
     }
+
 
     float GetLandscapeNoise(int worldX, int worldZ)
     {
@@ -236,11 +210,38 @@ public class Chunk : MonoBehaviour
     }
 
 
-
-
-    int GetHeight3D()
+    bool CheckCaves(int worldX, int worldY, int worldZ)
     {
-        return 0;
+        if (world.generateCaves)
+        {
+            List<int> heights3D = new List<int>();
+
+
+            for (int noise3d = 0; noise3d < world.noises3D.Count; noise3d++)
+            {
+                int height3D = Mathf.FloorToInt(
+                    ((world.noises3D[noise3d].GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.caveSettingsList[noise3d].amplitude);
+
+                heights3D.Add(height3D);
+            }
+
+
+
+            if (heights3D[0] <= world.caveSettingsList[0].caveTolerancy &&
+                heights3D[1] <= world.caveSettingsList[1].caveTolerancy &&
+                heights3D[2] <= world.caveSettingsList[2].caveTolerancy)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return true;
+        }
     }
 
 
@@ -315,9 +316,6 @@ public class Chunk : MonoBehaviour
 
         StartCoroutine(this.GenerateMesh());
     }
-
-
-
 
     public void SetBlock(Vector3Int coordinates, BlockScriptableObject block)
     {

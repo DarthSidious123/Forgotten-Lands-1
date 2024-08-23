@@ -816,7 +816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e9d3f0fefd09400c9d5bdb609b3b8ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  biomeFrequency: 0.01
+  biomeFrequency: 0.001
   biomeAmplitude: 0
   biomeNoiseType: 3
   sumBiomeProbalitiy: 0

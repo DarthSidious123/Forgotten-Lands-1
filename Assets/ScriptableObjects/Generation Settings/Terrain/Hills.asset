@@ -15,7 +15,7 @@ MonoBehaviour:
   probability: 0.5
   noiseType: 3
   frequency: 0.001
-  amplitude: 10
+  amplitude: 15
   octaves: 3
   maximumHeight: 1
   scale: 50

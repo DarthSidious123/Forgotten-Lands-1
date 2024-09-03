@@ -13,9 +13,14 @@ public class FastNoiseSettingsSO : ScriptableObject
 
     [Range(0f, 1f)]
     public float frequency;
-    [Range(0f, 100f)]
     public float amplitude;
 
+
+    [Header("Octaves")]
+
+    public FastNoiseLite.FractalType fractalType = FastNoiseLite.FractalType.None;
+
     public int octaves = 1;
+
 
 }

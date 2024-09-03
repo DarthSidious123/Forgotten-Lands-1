@@ -16,6 +16,6 @@ MonoBehaviour:
   noiseType: 3
   frequency: 0.001
   amplitude: 5
+  fractalType: 1
   octaves: 3
-  maximumHeight: 1
   scale: 100

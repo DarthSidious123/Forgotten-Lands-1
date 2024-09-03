@@ -17,10 +17,28 @@ public class World : MonoBehaviour
     public float biomeAmplitude = 10f;
     public FastNoiseLite.NoiseType biomeNoiseType = FastNoiseLite.NoiseType.Perlin;
 
-    [HideInInspector]
-    public float sumBiomeProbalitiy = 0;
+    public int biomeOctaves = 1;
+    public FastNoiseLite.FractalType biomeFractalType = FastNoiseLite.FractalType.None;
+
+
+
 
     public FastNoiseLite landscapeMap, temperatureMap, wetMap;
+
+
+    [Space(25)]
+
+    [Header("Terrain settings")]
+
+    public FastNoise2DSettingsSO planeSettings;
+    public FastNoise2DSettingsSO mountainSettings;
+
+    public FastNoiseLite planeNoise, mountainNoise, terrainBlenderNoise;
+
+    [Range(0f, 1f)]
+    public float terrainBlenderFrequency = 0.5f, mountainThreshold = 0.6f;
+
+    public int terrainBlenderScale = 50;
 
     [Space(10)]
 
@@ -74,7 +92,10 @@ public class World : MonoBehaviour
 
     void Awake()
     {
-        SumBiomeProbability();
+        CreateTerrainNoises();
+
+
+
 
         CreateFastNoiseLite2D();
         CreateFastNoiseLite3D();
@@ -114,20 +135,17 @@ public class World : MonoBehaviour
     //
     //
 
-    void SumBiomeProbability()
-    {
-        foreach (var biome in landscapeSettingsList)
-        {
-            sumBiomeProbalitiy += biome.probability;
-        }
-    }
-
     void CreateTerrainMap2D()
     {
         landscapeMap = new FastNoiseLite((int)seed);
 
         landscapeMap.SetNoiseType(biomeNoiseType);
         landscapeMap.SetFrequency(biomeFrequency);
+
+        landscapeMap.SetFractalType(biomeFractalType);
+        landscapeMap.SetFractalOctaves(biomeOctaves);
+        landscapeMap.SetFractalLacunarity(2f);
+        landscapeMap.SetFractalGain(0.5f);
     }
 
     void CreateFastNoiseLite2D()
@@ -143,6 +161,56 @@ public class World : MonoBehaviour
         }
 
     }
+
+
+
+
+    void CreateTerrainNoises()
+    {
+        planeNoise = new FastNoiseLite((int)(seed));
+
+        planeNoise.SetNoiseType(planeSettings.noiseType);
+        planeNoise.SetFrequency(planeSettings.frequency);
+
+        planeNoise.SetFractalType(planeSettings.fractalType);
+        planeNoise.SetFractalOctaves(planeSettings.octaves);
+        planeNoise.SetFractalLacunarity(2);
+        planeNoise.SetFractalGain(0.5f);
+
+
+
+        mountainNoise = new FastNoiseLite((int)(seed));
+
+        mountainNoise.SetNoiseType(mountainSettings.noiseType);
+        mountainNoise.SetFrequency(mountainSettings.frequency);
+
+        mountainNoise.SetFractalType(mountainSettings.fractalType);
+        mountainNoise.SetFractalOctaves(mountainSettings.octaves);
+        mountainNoise.SetFractalLacunarity(2);
+        mountainNoise.SetFractalGain(0.5f);
+
+
+
+        terrainBlenderNoise = new FastNoiseLite((int)(seed));
+
+        terrainBlenderNoise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+        terrainBlenderNoise.SetFrequency(terrainBlenderFrequency);
+
+        /*
+        terrainBlenderNoise.SetFractalType(terrainBlenderSettings.fractalType);
+        terrainBlenderNoise.SetFractalOctaves(terrainBlenderSettings.octaves);
+        terrainBlenderNoise.SetFractalLacunarity(2);
+        terrainBlenderNoise.SetFractalGain(0.5f);
+        */
+    }
+
+
+
+
+
+
+
+
     
     void CreateFastNoiseLite3D()
     {

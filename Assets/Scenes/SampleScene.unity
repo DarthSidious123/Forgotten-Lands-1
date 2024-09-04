@@ -323,8 +323,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 576473558}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -378,81 +377,6 @@ Transform:
   - {fileID: 705507995}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &576473557
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 576473558}
-  - component: {fileID: 576473560}
-  - component: {fileID: 576473559}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &576473558
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 576473557}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 348749162}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 50}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &576473559
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 576473557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c49ddc880154e48e5a8464738b819293, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &576473560
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 576473557}
-  m_CullTransparentMesh: 0
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -822,13 +746,15 @@ MonoBehaviour:
   biomeOctaves: 3
   biomeFractalType: 1
   planeSettings: {fileID: 11400000, guid: 699c0f7988c1d8d49b1e5e282d188999, type: 2}
-  mountainSettings: {fileID: 11400000, guid: adf94fa69e8d70145ba0bf93d0a7dbf9, type: 2}
+  sharpMountainSettings: {fileID: 11400000, guid: adf94fa69e8d70145ba0bf93d0a7dbf9,
+    type: 2}
+  smoothMountainSettings: {fileID: 11400000, guid: 7ea18f9528982f645972950b576f18e3,
+    type: 2}
+  plateauMountainSettings: {fileID: 11400000, guid: 657e1f3e29c7fe548ae64e041b78a6df,
+    type: 2}
   terrainBlenderFrequency: 0.02
-  mountainThreshold: 0.65
-  terrainBlenderScale: 1
-  landscapeSettingsList:
-  - {fileID: 11400000, guid: 699c0f7988c1d8d49b1e5e282d188999, type: 2}
-  - {fileID: 11400000, guid: adf94fa69e8d70145ba0bf93d0a7dbf9, type: 2}
+  mountainBlenderFrequency: 0.001
+  mountainThreshold: 0.6
   caveSettingsList:
   - {fileID: 11400000, guid: 47d5c55f6832a4643a32afde27f4089c, type: 2}
   - {fileID: 11400000, guid: 14dd7b98a1e5ae84f871b547ba81382a, type: 2}
@@ -837,10 +763,10 @@ MonoBehaviour:
   noiseScale: 32
   worldSeed: 1234
   seed: 0
-  minimumSeeLevel: 10
+  seaLevel: 40
   maximumLandHeight: 20
   renderDistance: 2
-  viewDistance: 20
+  viewDistance: 10
   itemTable: {fileID: 11400000, guid: 42cb2e6c15bca4e9fabdccb38d35c4c5, type: 2}
   blockTable: {fileID: 11400000, guid: e86216db9d78a65449d557ba585f8239, type: 2}
   ChunkPrefab: {fileID: 8314088254131425182, guid: 89100dc351b6341a7960b7b590c5db9e,
@@ -935,7 +861,7 @@ Transform:
   m_GameObject: {fileID: 2116802095}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.69, y: 23.1, z: 4.02}
+  m_LocalPosition: {x: 0, y: 25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

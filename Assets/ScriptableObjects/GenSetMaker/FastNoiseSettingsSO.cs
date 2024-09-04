@@ -5,10 +5,6 @@ using UnityEngine;
 
 public class FastNoiseSettingsSO : ScriptableObject
 {
-    public float probability = 0.5f;
-
-
-
     public FastNoiseLite.NoiseType noiseType = FastNoiseLite.NoiseType.Perlin;
 
     [Range(0f, 1f)]

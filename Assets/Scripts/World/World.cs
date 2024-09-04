@@ -31,22 +31,22 @@ public class World : MonoBehaviour
     [Header("Terrain settings")]
 
     public FastNoise2DSettingsSO planeSettings;
-    public FastNoise2DSettingsSO mountainSettings;
+    public FastNoise2DSettingsSO sharpMountainSettings;
+    public FastNoise2DSettingsSO smoothMountainSettings;
+    public FastNoise2DSettingsSO plateauMountainSettings;
 
-    public FastNoiseLite planeNoise, mountainNoise, terrainBlenderNoise;
+    public FastNoiseLite planeNoise, sharpMountainNoise, smoothMountainNoise, plateauMountainNoise, terrainBlenderNoise, mountainBlenderNoise;
 
     [Range(0f, 1f)]
-    public float terrainBlenderFrequency = 0.5f, mountainThreshold = 0.6f;
+    public float terrainBlenderFrequency = 0.5f, mountainBlenderFrequency = 0.5f, mountainThreshold = 0.6f;
 
-    public int terrainBlenderScale = 50;
 
-    [Space(10)]
 
-    [Header("Landscape settings")]
 
-    public List<FastNoise2DSettingsSO> landscapeSettingsList;
 
-    [Space(10)]
+
+
+    [Space(25)]
 
     [Header("Cave settings")]
 
@@ -70,7 +70,7 @@ public class World : MonoBehaviour
 
 
     [Header("World Gen")]
-    public int minimumSeeLevel = 40;
+    public int seaLevel = 40;
     public int maximumLandHeight = 80;
 
 
@@ -94,10 +94,6 @@ public class World : MonoBehaviour
     {
         CreateTerrainNoises();
 
-
-
-
-        CreateFastNoiseLite2D();
         CreateFastNoiseLite3D();
         CreateTerrainMap2D();
     }
@@ -148,46 +144,58 @@ public class World : MonoBehaviour
         landscapeMap.SetFractalGain(0.5f);
     }
 
-    void CreateFastNoiseLite2D()
-    {
-        foreach (var noise2D in landscapeSettingsList)
-        {
-            var noise = new FastNoiseLite((int)seed);
-
-            noise.SetNoiseType(noise2D.noiseType);
-            noise.SetFrequency(noise2D.frequency);
-
-            noises2D.Add(noise);
-        }
-
-    }
-
-
-
-
     void CreateTerrainNoises()
     {
-        planeNoise = new FastNoiseLite((int)(seed));
+        if (planeSettings != null)
+        {
+            planeNoise = new FastNoiseLite((int)(seed));
 
-        planeNoise.SetNoiseType(planeSettings.noiseType);
-        planeNoise.SetFrequency(planeSettings.frequency);
+            planeNoise.SetNoiseType(planeSettings.noiseType);
+            planeNoise.SetFrequency(planeSettings.frequency);
 
-        planeNoise.SetFractalType(planeSettings.fractalType);
-        planeNoise.SetFractalOctaves(planeSettings.octaves);
-        planeNoise.SetFractalLacunarity(2);
-        planeNoise.SetFractalGain(0.5f);
+            planeNoise.SetFractalType(planeSettings.fractalType);
+            planeNoise.SetFractalOctaves(planeSettings.octaves);
+            planeNoise.SetFractalLacunarity(2);
+            planeNoise.SetFractalGain(0.5f);
+        }
 
+        if (sharpMountainSettings != null)
+        {
+            sharpMountainNoise = new FastNoiseLite((int)(seed));
 
+            sharpMountainNoise.SetNoiseType(sharpMountainSettings.noiseType);
+            sharpMountainNoise.SetFrequency(sharpMountainSettings.frequency);
 
-        mountainNoise = new FastNoiseLite((int)(seed));
+            sharpMountainNoise.SetFractalType(sharpMountainSettings.fractalType);
+            sharpMountainNoise.SetFractalOctaves(sharpMountainSettings.octaves);
+            sharpMountainNoise.SetFractalLacunarity(2);
+            sharpMountainNoise.SetFractalGain(0.5f);
+        }
 
-        mountainNoise.SetNoiseType(mountainSettings.noiseType);
-        mountainNoise.SetFrequency(mountainSettings.frequency);
+        if (smoothMountainSettings != null)
+        {
+            smoothMountainNoise = new FastNoiseLite((int)(seed));
 
-        mountainNoise.SetFractalType(mountainSettings.fractalType);
-        mountainNoise.SetFractalOctaves(mountainSettings.octaves);
-        mountainNoise.SetFractalLacunarity(2);
-        mountainNoise.SetFractalGain(0.5f);
+            smoothMountainNoise.SetNoiseType(smoothMountainSettings.noiseType);
+            smoothMountainNoise.SetFrequency(smoothMountainSettings.frequency);
+
+            smoothMountainNoise.SetFractalType(smoothMountainSettings.fractalType);
+            smoothMountainNoise.SetFractalOctaves(smoothMountainSettings.octaves);
+            smoothMountainNoise.SetFractalLacunarity(2);
+            smoothMountainNoise.SetFractalGain(0.5f);
+        }
+
+        if (plateauMountainSettings != null)
+        {
+            plateauMountainNoise = new FastNoiseLite((int)(seed));
+            plateauMountainNoise.SetNoiseType(plateauMountainSettings.noiseType);
+            plateauMountainNoise.SetFrequency(plateauMountainSettings.frequency);
+
+            plateauMountainNoise.SetFractalType(plateauMountainSettings.fractalType);
+            plateauMountainNoise.SetFractalOctaves(plateauMountainSettings.octaves);
+            plateauMountainNoise.SetFractalLacunarity(2);
+            plateauMountainNoise.SetFractalGain(0.5f);
+        }
 
 
 
@@ -195,6 +203,13 @@ public class World : MonoBehaviour
 
         terrainBlenderNoise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
         terrainBlenderNoise.SetFrequency(terrainBlenderFrequency);
+
+
+
+        mountainBlenderNoise = new FastNoiseLite((int)seed);
+
+        mountainBlenderNoise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
+        mountainBlenderNoise.SetFrequency(mountainBlenderFrequency);
 
         /*
         terrainBlenderNoise.SetFractalType(terrainBlenderSettings.fractalType);

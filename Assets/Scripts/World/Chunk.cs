@@ -4,16 +4,18 @@ using System.Threading.Tasks;
 using System.Linq;
 using System;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using System.Reflection;
+using Unity.AI.Navigation;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshCollider))]
 public class Chunk : MonoBehaviour
 {
     public const int Size = 16;
 
-    public World world;
+
 
     [HideInInspector]
     public Vector3Int coordinates;
@@ -23,10 +25,18 @@ public class Chunk : MonoBehaviour
 
     public ChunkNeighbours neighbours;
 
+    [HideInInspector]
     public List<Vector3> vertices;
+    [HideInInspector]
     public List<int> triangles;
+    [HideInInspector]
     public List<Vector2> uv;
     public int verticesIndex = 0;
+
+
+    [Header("Links")]
+    public NavMeshSurface surface;
+    public World world;
 
     private MeshFilter filter;
     private new MeshCollider collider;
@@ -51,7 +61,16 @@ public class Chunk : MonoBehaviour
 
     void Awake()
     {
+        //surface = GetComponent<NavMeshSurface>();
+
+
+
+
         generateBlock = new GenerateBlock(this);
+
+
+
+
 
 
         this.blocks = new BlockScriptableObject[Chunk.Size, Chunk.Size, Chunk.Size];
@@ -75,12 +94,29 @@ public class Chunk : MonoBehaviour
         this.neighbours = new ChunkNeighbours(this.world, this.coordinates);
 
         this.Init();
+
+        //ReloadNavMeshSurface();
     }
 
     void Update()
     {
         // this.FrustrumCulling();
     }
+
+
+    void ReloadNavMeshSurface()
+    {
+        if (surface != null)
+        {
+            surface.BuildNavMesh();
+        }
+    }
+
+
+
+
+
+
 
 
     public void Init()
@@ -162,7 +198,7 @@ public class Chunk : MonoBehaviour
             }
         }
 
-        this.loaded = true;
+        this.loaded = true;  
         this.StartFirstRender();
     }
 
@@ -212,7 +248,7 @@ public class Chunk : MonoBehaviour
         //float finalValue = sharpMountainValue;
         float finalValue = smoothMountainValue;
 
-        if (mountainBlenderValue > 0.6f)
+        if (mountainBlenderValue > 0.5f)
         {
             finalValue = Mathf.Max(smoothMountainValue, mountainBlendedValue);
         }
@@ -244,16 +280,6 @@ public class Chunk : MonoBehaviour
 
         return Mathf.FloorToInt(blendedValue);
     }
-
-
-
-    float GetLandscapeNoise(int worldX, int worldZ)
-    {
-        float landscapeValue = world.landscapeMap.GetNoise(worldX * 10, worldZ * 10);
-
-        return (landscapeValue + 1) / 2;
-    }
-
 
     bool CheckCaves(int worldX, int worldY, int worldZ)
     {
@@ -369,7 +395,7 @@ public class Chunk : MonoBehaviour
         int y = Chunk.CorrectBlockCoordinate(coordinates.y);
         int z = Chunk.CorrectBlockCoordinate(coordinates.z);
 
-        blocks[x, y, z] = world.blockTable.GetBlock("air");
+        //blocks[x, y, z] = world.blockTable.GetBlock("air");
         this.blocks[x, y, z] = block;
     }
 
@@ -378,6 +404,10 @@ public class Chunk : MonoBehaviour
         int x = Chunk.CorrectBlockCoordinate(coordinates.x);
         int y = Chunk.CorrectBlockCoordinate(coordinates.y);
         int z = Chunk.CorrectBlockCoordinate(coordinates.z);
+
+
+
+
 
         this.blocks[x, y, z] = block;
 
@@ -394,6 +424,7 @@ public class Chunk : MonoBehaviour
             neighbour?.NeighbourRenderChunk();
         }
 
+
         if (y == 0)
         {
             var neighbour = this.world.GetChunkNoCheck(this.coordinates + new Vector3Int(0, -1, 0));
@@ -404,6 +435,7 @@ public class Chunk : MonoBehaviour
             var neighbour = this.world.GetChunkNoCheck(this.coordinates + new Vector3Int(0, 1, 0));
             neighbour?.NeighbourRenderChunk();
         }
+
 
         if (z == 0)
         {

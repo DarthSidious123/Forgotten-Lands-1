@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+    public BlockScriptableObject block;
+
     public World world;
 
     public new CameraController camera;
@@ -16,8 +18,8 @@ public class PlayerController : MonoBehaviour
 
     public LayerMask chunkMeshMask;
 
-    [Range(0, .3f)]
-    public float movementSmoothing = .05f;
+    [Range(0, 0.3f)]
+    public float movementSmoothing = 0.05f;
 
     private new Rigidbody rigidbody;
     private Vector3 velocity = new Vector3();
@@ -29,12 +31,6 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        this.transform.eulerAngles = new Vector3(0, camera.yaw, 0);
-
-        this.velocity = this.transform.forward * Input.GetAxisRaw("Vertical");
-        this.velocity += this.transform.right * Input.GetAxisRaw("Horizontal");
-        this.velocity += Vector3.up * (Input.GetAxisRaw("Jump") - Input.GetAxisRaw("Duck"));
-        this.velocity *= this.speed * Time.deltaTime * 10.0f;
 
         SetBlock();
 
@@ -44,9 +40,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        var targetVelocity = velocity;
-
-        this.rigidbody.velocity = Vector3.SmoothDamp(this.rigidbody.velocity, targetVelocity, ref targetVelocity, this.movementSmoothing);
+        Fly();
     }
 
     void OnDrawGizmos()
@@ -55,9 +49,28 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawLine(Camera.main.transform.position, Camera.main.transform.position + Camera.main.transform.forward * this.breakDistance);
     }
 
+
+
+
+    public void Fly()
+    {
+        this.transform.eulerAngles = new Vector3(0, camera.yaw, 0);
+
+        this.velocity = this.transform.forward * Input.GetAxisRaw("Vertical");
+        this.velocity += this.transform.right * Input.GetAxisRaw("Horizontal");
+        this.velocity += Vector3.up * (Input.GetAxisRaw("Jump") - Input.GetAxisRaw("Duck"));
+        this.velocity *= this.speed * Time.deltaTime * 10.0f;
+
+        var targetVelocity = velocity;
+
+        this.rigidbody.velocity = Vector3.SmoothDamp(this.rigidbody.velocity, targetVelocity, ref targetVelocity, this.movementSmoothing);
+
+    }
+
+
+
     public void SetBlock()
     {
-
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
         {
             Vector3Int blockCoord = this.world.WorldCoordinateToBlock(camera.transform.position);
@@ -67,10 +80,18 @@ public class PlayerController : MonoBehaviour
 
             Physics.Raycast(camera.transform.position, camera.transform.forward, out var hit);
 
+            if (hit.collider == null)
+            {
+                return;
+            }
+
             Chunk chunk = hit.collider.GetComponent<Chunk>();
 
             Vector3 coordinates = new Vector3();
-            Vector3Int coordinatesInt = new Vector3Int();
+            Vector3Int localCoordinatesInt = new Vector3Int();
+            Vector3Int globalCoordinatesInt = new Vector3Int();
+
+
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -80,20 +101,34 @@ public class PlayerController : MonoBehaviour
                 int y = Mathf.RoundToInt(coordinates.y) % 16;
                 int z = Mathf.RoundToInt(coordinates.z) % 16;
 
-                coordinatesInt.x = x; coordinatesInt.y = y; coordinatesInt.z = z;
+                localCoordinatesInt.x = x; localCoordinatesInt.y = y; localCoordinatesInt.z = z;
 
-                //chunk.ResetBlock(new Vector3Int(x, y, z), world.blockTable.GetBlock("air"));
-                chunk.BreakBlock(coordinatesInt);
+                chunk.BreakBlock(localCoordinatesInt);
             }
             if (Input.GetMouseButtonDown(1))
             {
+                
+
+
                 coordinates = hit.point + hit.normal / 2;
+
+                int gX = Mathf.RoundToInt(coordinates.x);
+                int gY = Mathf.RoundToInt(coordinates.y);
+                int gZ = Mathf.RoundToInt(coordinates.z);
+
+                globalCoordinatesInt.x = gX; globalCoordinatesInt.y = gY; globalCoordinatesInt.z = gZ;
+
+                int x = Mathf.RoundToInt(coordinates.x) % 16;
+                int y = Mathf.RoundToInt(coordinates.y) % 16;
+                int z = Mathf.RoundToInt(coordinates.z) % 16;
+
+                localCoordinatesInt.x = x; localCoordinatesInt.y = y; localCoordinatesInt.z = z;
+
+                world.GetChunkByGlobalBlockCoordinates(globalCoordinatesInt).ResetBlock(localCoordinatesInt, block);
+
+                //chunk.ResetBlock(localCoordinatesInt, block);
             }
-
-            //chunk.BreakBlock(new Vector3Int(x, y, z));
         }
-
-
     }
 
 

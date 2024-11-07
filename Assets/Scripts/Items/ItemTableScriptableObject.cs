@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item Table")]
+[CreateAssetMenu(menuName = "SO/Item Table")]
 public class ItemTableScriptableObject : ScriptableObject
 {
     public List<Item> items = new List<Item>();

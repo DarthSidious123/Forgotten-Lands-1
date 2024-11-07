@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Block")]
+[CreateAssetMenu(menuName = "SO/Block")]
 public class BlockScriptableObject : ItemScriptableObject
 {
     public float restistance = 1.0f;

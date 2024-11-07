@@ -9,7 +9,7 @@ public class World : MonoBehaviour
     //public Vector2Int size;
 
     public const int MaxWorldHeight = 128;
-
+    public int minDelay = 1, maxDelay = 10;
 
     [Header("Biome Maps settings")]
 
@@ -311,6 +311,37 @@ public class World : MonoBehaviour
         yield return null;
     }
 
+
+
+
+
+    async void AsyncGenerateChunk()
+    {
+        var radius = renderDistance;
+        var center = lastPlayerChunk;
+
+
+        await Task.Run(() =>
+        {
+            for (var x = -renderDistance + center.x; x <= renderDistance + center.x; x++)
+            {
+                for (var y = -renderDistance + center.y; y <= renderDistance + center.y; y++)
+                {
+                    for (var z = -renderDistance + center.z; z <= renderDistance + center.z;)
+                    {
+                        Vector3Int chunkPos = new Vector3Int(x, y, z);
+
+                        CreateChunk(chunkPos);
+                    }
+                }
+            }
+        });
+
+    }
+
+
+
+
     private IEnumerator GenerateChunks()
     {
         var radius = this.renderDistance;
@@ -326,7 +357,7 @@ public class World : MonoBehaviour
             this.GenerateChunkIfInRange(new Vector3Int(0, 0, i) + center);
             this.GenerateChunkIfInRange(new Vector3Int(0, 0, -i) + center);
 
-            yield return null;
+            yield return UnityEngine.Random.Range(minDelay, minDelay);
 
             for (int j = 1; j <= i; j++)
             {
@@ -340,7 +371,7 @@ public class World : MonoBehaviour
                 this.GenerateChunkIfInRange(new Vector3Int(i, j, -j) + center);
                 this.GenerateChunkIfInRange(new Vector3Int(i, -j, -j) + center);
 
-                yield return null;
+                yield return UnityEngine.Random.Range(minDelay, minDelay);
 
                 // -x
                 this.GenerateChunkIfInRange(new Vector3Int(-i, j, 0) + center);
@@ -352,7 +383,7 @@ public class World : MonoBehaviour
                 this.GenerateChunkIfInRange(new Vector3Int(-i, j, -j) + center);
                 this.GenerateChunkIfInRange(new Vector3Int(-i, -j, -j) + center);
 
-                yield return null;
+                yield return UnityEngine.Random.Range(minDelay, minDelay);
 
                 // +z
                 this.GenerateChunkIfInRange(new Vector3Int(0, j, i) + center);
@@ -364,7 +395,7 @@ public class World : MonoBehaviour
                 this.GenerateChunkIfInRange(new Vector3Int(-j, j, i) + center);
                 this.GenerateChunkIfInRange(new Vector3Int(-j, -j, i) + center);
 
-                yield return null;
+                yield return UnityEngine.Random.Range(minDelay, minDelay);
 
                 // -z
                 this.GenerateChunkIfInRange(new Vector3Int(0, j, -i) + center);
@@ -376,7 +407,7 @@ public class World : MonoBehaviour
                 this.GenerateChunkIfInRange(new Vector3Int(-j, j, -i) + center);
                 this.GenerateChunkIfInRange(new Vector3Int(-j, -j, -i) + center);
 
-                yield return null;
+                yield return UnityEngine.Random.Range(minDelay, minDelay);
 
                 
                 // +y
@@ -389,7 +420,7 @@ public class World : MonoBehaviour
                 this.GenerateChunkIfInRange(new Vector3Int(-j, i, j) + center);
                 this.GenerateChunkIfInRange(new Vector3Int(-j, i, -j) + center);
 
-                yield return null;
+                yield return UnityEngine.Random.Range(minDelay, minDelay);
 
                 // -y
                 this.GenerateChunkIfInRange(new Vector3Int(0, -i, j) + center);
@@ -401,7 +432,7 @@ public class World : MonoBehaviour
                 this.GenerateChunkIfInRange(new Vector3Int(-j, -i, j) + center);
                 this.GenerateChunkIfInRange(new Vector3Int(-j, -i, -j) + center);
 
-                yield return null;
+                yield return UnityEngine.Random.Range(minDelay, minDelay);
                 
                 
                 // +x
@@ -416,7 +447,7 @@ public class World : MonoBehaviour
                     this.GenerateChunkIfInRange(new Vector3Int(i, k, -j) + center);
                     this.GenerateChunkIfInRange(new Vector3Int(i, -k, -j) + center);
 
-                    yield return null;
+                    yield return UnityEngine.Random.Range(minDelay, minDelay);
                 }
 
                 // -x
@@ -431,7 +462,7 @@ public class World : MonoBehaviour
                     this.GenerateChunkIfInRange(new Vector3Int(-i, k, -j) + center);
                     this.GenerateChunkIfInRange(new Vector3Int(-i, -k, -j) + center);
 
-                    yield return null;
+                    yield return UnityEngine.Random.Range(minDelay, minDelay);
                 }
 
                 // +z
@@ -446,7 +477,7 @@ public class World : MonoBehaviour
                     this.GenerateChunkIfInRange(new Vector3Int(-j, k, i) + center);
                     this.GenerateChunkIfInRange(new Vector3Int(-j, -k, i) + center);
 
-                    yield return null;
+                    yield return UnityEngine.Random.Range(minDelay, minDelay);
                 }
 
                 // -z
@@ -461,7 +492,7 @@ public class World : MonoBehaviour
                     this.GenerateChunkIfInRange(new Vector3Int(-j, k, -i) + center);
                     this.GenerateChunkIfInRange(new Vector3Int(-j, -k, -i) + center);
 
-                    yield return null;
+                    yield return UnityEngine.Random.Range(minDelay, minDelay);
                 }
 
                 
@@ -477,7 +508,7 @@ public class World : MonoBehaviour
                     this.GenerateChunkIfInRange(new Vector3Int(-j, i, k) + center);
                     this.GenerateChunkIfInRange(new Vector3Int(-j, i, -k) + center);
 
-                    yield return null;
+                    yield return UnityEngine.Random.Range(minDelay, minDelay);
                 }
 
                 // -y
@@ -492,35 +523,20 @@ public class World : MonoBehaviour
                     this.GenerateChunkIfInRange(new Vector3Int(-j, -i, k) + center);
                     this.GenerateChunkIfInRange(new Vector3Int(-j, -i, -k) + center);
 
-                    yield return null;
+                    yield return UnityEngine.Random.Range(minDelay, minDelay);
 
                 }
                 
                 
             }
 
-            yield return null;
+            yield return UnityEngine.Random.Range(minDelay, minDelay);
         }
     }
 
     public void GenerateChunkIfInRange(Vector3Int coordinates)
     {
-        // if (!this.IsOutOfRange(coordinates) && coordinates.y >= 0)
-        // {
-        //     this.GetChunk(coordinates);
-        // }
-
         this.GetChunk(coordinates);
-    }
-
-    public float Noise(float x, float z)
-    {
-        return Perlin.Noise(((x / this.noiseScale) + this.seed), ((z / this.noiseScale) + this.seed));
-    }
-
-    public float Noise(float x, float z, float y)
-    {
-        return Perlin.Noise(((x / this.noiseScale) + this.seed), ((z / this.noiseScale) + this.seed), ((y / this.noiseScale) + this.seed));
     }
 
     public Chunk SetBlock(string id, Vector3Int coordinates)
@@ -528,7 +544,7 @@ public class World : MonoBehaviour
         var item = this.itemTable.GetItem(id);
         var block = item.item as BlockScriptableObject;
 
-        var chunk = this.GetBlockChunk(coordinates);
+        var chunk = this.GetChunkByGlobalBlockCoordinates(coordinates);
 
         var x = coordinates.x % Chunk.Size;
         var y = coordinates.y % Chunk.Size;
@@ -539,9 +555,9 @@ public class World : MonoBehaviour
         return chunk;
     }
 
-    public Chunk GetBlockChunk(Vector3Int blockCoordinates)
+    public Chunk GetChunkByGlobalBlockCoordinates(Vector3Int globalBlockCoordinates)
     {
-        var coordinates = blockCoordinates / Chunk.Size;
+        var coordinates = globalBlockCoordinates / Chunk.Size;
         return this.chunks[coordinates];
     }
 

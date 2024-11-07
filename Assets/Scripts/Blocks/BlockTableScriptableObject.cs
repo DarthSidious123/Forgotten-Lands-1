@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Block Table")]
+[CreateAssetMenu(menuName = "SO/Block Table")]
 public class BlockTableScriptableObject : ScriptableObject
 {
     public List<Block> blocks = new List<Block>();

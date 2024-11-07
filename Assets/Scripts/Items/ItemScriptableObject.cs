@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Item")]
+[CreateAssetMenu(menuName = "SO/Item")]
 public class ItemScriptableObject : ScriptableObject
 {
     public float miningPower = 1.0f;

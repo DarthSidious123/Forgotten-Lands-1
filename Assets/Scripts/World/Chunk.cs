@@ -93,8 +93,16 @@ public class Chunk : MonoBehaviour
 
         this.neighbours = new ChunkNeighbours(this.world, this.coordinates);
 
-        this.Init();
-
+        /*
+        if (loaded)
+        {
+            LoadChunk();
+        }
+        else
+        {
+            Init();
+        }
+        */
         //ReloadNavMeshSurface();
     }
 
@@ -117,7 +125,19 @@ public class Chunk : MonoBehaviour
 
 
 
-
+    public void LoadChunk()
+    {
+        for (int x = 0; x < Chunk.Size; x++)
+        {
+            for (int y = 0; y < Chunk.Size; y++)
+            {
+                for (int z = 0; z < Chunk.Size; z++)
+                {
+                    SetBlock(new Vector3Int(x, y, z), blocks[x, y, z]);
+                }
+            }
+        }
+    }
 
     public void Init()
     {
@@ -314,6 +334,11 @@ public class Chunk : MonoBehaviour
             return true;
         }
     }
+
+
+
+
+
 
 
 

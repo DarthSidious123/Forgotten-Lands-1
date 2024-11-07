@@ -60,7 +60,7 @@ public class World : MonoBehaviour
     public List<FastNoiseLite> noises3D = new List<FastNoiseLite>();
 
 
- 
+
 
 
     [Header("World Gen - Noise")]
@@ -314,7 +314,7 @@ public class World : MonoBehaviour
 
 
 
-
+    /*
     async void AsyncGenerateChunk()
     {
         var radius = renderDistance;
@@ -338,7 +338,7 @@ public class World : MonoBehaviour
         });
 
     }
-
+    */
 
 
 
@@ -555,6 +555,7 @@ public class World : MonoBehaviour
         return chunk;
     }
 
+
     public Chunk GetChunkByGlobalBlockCoordinates(Vector3Int globalBlockCoordinates)
     {
         var coordinates = globalBlockCoordinates / Chunk.Size;
@@ -578,14 +579,46 @@ public class World : MonoBehaviour
 
     public Chunk CreateChunk(Vector3Int coordinates)
     {
-        if(coordinates.y >= -(MaxWorldHeight / Chunk.Size) && coordinates.y <= (MaxWorldHeight / Chunk.Size)) 
+        if (coordinates.y >= -(MaxWorldHeight / Chunk.Size) && coordinates.y <= (MaxWorldHeight / Chunk.Size))
         {
             var chunkCoordinates = coordinates * Chunk.Size;
 
-            var obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
+            BlockScriptableObject[,,] blocks = new BlockScriptableObject[Chunk.Size, Chunk.Size, Chunk.Size];
 
-            var chunk = obj.GetComponent<Chunk>();
-            chunk.coordinates = coordinates;
+            Chunk chunk = null;
+            GameObject obj = null;
+
+            if (chunks.ContainsKey(coordinates))
+            {
+                for (int x = 0; x < Chunk.Size; x++)
+                {
+                    for (int y = 0; y < Chunk.Size; y++)
+                    {
+                        for (int z = 0; z < Chunk.Size; z++)
+                        {
+                            blocks[x, y, z] = chunks[coordinates].blocks[x, y, z];
+                        }
+                    }
+                }
+
+                obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
+                chunk = obj.GetComponent<Chunk>();
+                chunk.loaded = true;
+                chunk.blocks = blocks;
+
+                chunk.LoadChunk();
+
+                return chunk;
+            }
+            else
+            {
+                obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
+                chunk = obj.GetComponent<Chunk>();
+                chunk.coordinates = coordinates;
+
+                chunk.Init();
+            }
+
 
             this.chunks.Add(coordinates, chunk);
 

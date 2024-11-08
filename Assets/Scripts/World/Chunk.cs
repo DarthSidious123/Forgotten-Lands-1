@@ -6,7 +6,6 @@ using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UIElements;
-using UnityEditor.Experimental.GraphView;
 using System.Reflection;
 using Unity.AI.Navigation;
 
@@ -44,17 +43,8 @@ public class Chunk : MonoBehaviour
 
     public GenerateBlock generateBlock;
 
+    public bool created = false;
     private Bounds bounds;
-
-    public bool loaded = false;
-
-
-    enum LandscapeType
-    {
-        Plains, Hills, Mountains
-    }
-
-
 
 
 
@@ -217,8 +207,9 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
+        created = true;
 
-        this.loaded = true;  
+ 
         this.StartFirstRender();
     }
 
@@ -501,7 +492,7 @@ public class Chunk : MonoBehaviour
 
     public void NeighbourRenderChunk()
     {
-        if (this.loaded)
+        if (world.chunks.TryGetValue(coordinates, out var chunk) && chunk != null && chunk.gameObject != null)
         {
             StartCoroutine(this.GenerateMesh());
         }

@@ -259,30 +259,41 @@ public class World : MonoBehaviour
         return (float)(random.NextDouble() * (Int16.MaxValue - (double)Int16.MinValue)) + Int16.MinValue;
     }
 
+
+    //
+    //
+    //
+
+
+
+
+
+
+
     private void DestroyOutOfRangeChunks()
     {
-        var toRemove = new List<Vector3Int>();
+        var toUnloadChunks = new List<Vector3Int>();
+
 
         foreach (var chunk in chunks.Values)
         {
-            var coordinates = chunk.coordinates;
-            if (this.IsOutOfRange(coordinates))
+            if (this.IsOutOfRange(chunk.coordinates) && chunk.gameObject != null)
             {
+
                 Destroy(chunk.gameObject);
-                toRemove.Add(coordinates);
             }
         }
 
-        foreach (var i in toRemove)
-        {
-            this.chunks.Remove(i);
-        }
     }
 
     private bool IsOutOfRange(Vector3Int chunkCoordinates)
     {
         return Vector3Int.Distance(this.lastPlayerChunk, chunkCoordinates) > this.viewDistance;
     }
+
+
+
+
 
     public Vector3Int WorldCoordinateToChunk(Vector3 coordinates)
     {
@@ -588,41 +599,32 @@ public class World : MonoBehaviour
             Chunk chunk = null;
             GameObject obj = null;
 
-            if (chunks.ContainsKey(coordinates))
+            if (chunks.TryGetValue(coordinates, out var existingChunk) && existingChunk != null)
             {
-                for (int x = 0; x < Chunk.Size; x++)
-                {
-                    for (int y = 0; y < Chunk.Size; y++)
-                    {
-                        for (int z = 0; z < Chunk.Size; z++)
-                        {
-                            blocks[x, y, z] = chunks[coordinates].blocks[x, y, z];
-                        }
-                    }
-                }
-
                 obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
                 chunk = obj.GetComponent<Chunk>();
-                chunk.loaded = true;
-                chunk.blocks = blocks;
-
+                chunk.blocks = existingChunk.blocks;
+                chunk.neighbours = new ChunkNeighbours(this, chunk.coordinates);
                 chunk.LoadChunk();
-
-                return chunk;
             }
             else
             {
+                
                 obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
                 chunk = obj.GetComponent<Chunk>();
                 chunk.coordinates = coordinates;
 
+
+                chunk.neighbours = new ChunkNeighbours(this, chunk.coordinates);
                 chunk.Init();
+
+                this.chunks.Add(coordinates, chunk);
+
+                return chunk;
             }
 
 
-            this.chunks.Add(coordinates, chunk);
 
-            return chunk;
         }
         return null;
     }

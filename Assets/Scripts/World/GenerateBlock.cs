@@ -31,7 +31,7 @@ public class GenerateBlock
         }
         else
         {
-            myHasBack = (chunk.neighbours.front?.loaded == true && chunk.neighbours.front.blocks[x, y, max] == null);
+            myHasBack = (chunk.neighbours.front?.created == true && chunk.neighbours.front.blocks[x, y, max] == null);
         }
 
 
@@ -42,7 +42,7 @@ public class GenerateBlock
         }
         else
         {
-            myHasFront = (chunk.neighbours.back?.loaded == true && chunk.neighbours.back.blocks[x, y, 0] == null);
+            myHasFront = (chunk.neighbours.back?.created == true && chunk.neighbours.back.blocks[x, y, 0] == null);
         }
 
 
@@ -53,7 +53,7 @@ public class GenerateBlock
         }
         else
         {
-            myHasTop = (chunk.neighbours.top?.loaded == true && chunk.neighbours.top.blocks[x, 0, z] == null);
+            myHasTop = (chunk.neighbours.top?.created == true && chunk.neighbours.top.blocks[x, 0, z] == null);
         }
 
 
@@ -64,7 +64,7 @@ public class GenerateBlock
         }
         else
         {
-            myHasBottom = (chunk.neighbours.bottom?.loaded == true && chunk.neighbours.bottom.blocks[x, max, z] == null);
+            myHasBottom = (chunk.neighbours.bottom?.created == true && chunk.neighbours.bottom.blocks[x, max, z] == null);
         }
 
         bool myHasLeft;
@@ -74,7 +74,7 @@ public class GenerateBlock
         }
         else
         {
-            myHasLeft = (chunk.neighbours.right?.loaded == true && chunk.neighbours.right.blocks[max, y, z] == null);
+            myHasLeft = (chunk.neighbours.right?.created == true && chunk.neighbours.right.blocks[max, y, z] == null);
         }
 
         bool myHasRight;
@@ -84,7 +84,7 @@ public class GenerateBlock
         }
         else
         {
-            myHasRight = (chunk.neighbours.left?.loaded == true && chunk.neighbours.left.blocks[0, y, z] == null);
+            myHasRight = (chunk.neighbours.left?.created == true && chunk.neighbours.left.blocks[0, y, z] == null);
         }
 
         return new bool[]

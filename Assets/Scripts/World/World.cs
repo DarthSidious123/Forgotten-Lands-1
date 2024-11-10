@@ -599,23 +599,25 @@ public class World : MonoBehaviour
             Chunk chunk = null;
             GameObject obj = null;
 
+            obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
+
+
+
             if (chunks.TryGetValue(coordinates, out var existingChunk) && existingChunk != null)
             {
                 obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
-                chunk = obj.GetComponent<Chunk>();
                 chunk.blocks = existingChunk.blocks;
                 chunk.neighbours = new ChunkNeighbours(this, chunk.coordinates);
-                chunk.LoadChunk();
             }
             else
             {
-                
-                obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
-                chunk = obj.GetComponent<Chunk>();
+
+            obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
+            chunk = obj.GetComponent<Chunk>();
                 chunk.coordinates = coordinates;
 
 
-                chunk.neighbours = new ChunkNeighbours(this, chunk.coordinates);
+            chunk.neighbours = new ChunkNeighbours(this, chunk.coordinates);
                 chunk.Init();
 
                 this.chunks.Add(coordinates, chunk);

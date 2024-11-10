@@ -15,12 +15,12 @@ public class GenerateBlock
     {
         var max = Chunk.Size - 1;
 
-        var hasBack = (z > 0) ? (chunk.blocks[x, y, z - 1] == null) : (chunk.neighbours.front?.loaded == true && chunk.neighbours.front.blocks[x, y, max] == null);
-        var hasFront = (z < max) ? (chunk.blocks[x, y, z + 1] == null) : (chunk.neighbours.back?.loaded == true && chunk.neighbours.back.blocks[x, y, 0] == null);
-        var hasTop = (y < max) ? (chunk.blocks[x, y + 1, z] == null) : (chunk.neighbours.top?.loaded == true && chunk.neighbours.top.blocks[x, 0, z] == null);
-        var hasBottom = (y > 0) ? (chunk.blocks[x, y - 1, z] == null) : (chunk.neighbours.bottom?.loaded == true && chunk.neighbours.bottom.blocks[x, max, z] == null);
-        var hasLeft = (x > 0) ? (chunk.blocks[x - 1, y, z] == null) : (chunk.neighbours.right?.loaded == true && chunk.neighbours.right.blocks[max, y, z] == null);
-        var hasRight = (x < max) ? (chunk.blocks[x + 1, y, z] == null) : (chunk.neighbours.left?.loaded == true && chunk.neighbours.left.blocks[0, y, z] == null);
+        var hasBack = (z > 0) ? (chunk.blocks[x, y, z - 1] == null) : (chunk.neighbours.front?.created == true && chunk.neighbours.front.blocks[x, y, max] == null);
+        var hasFront = (z < max) ? (chunk.blocks[x, y, z + 1] == null) : (chunk.neighbours.back?.created == true && chunk.neighbours.back.blocks[x, y, 0] == null);
+        var hasTop = (y < max) ? (chunk.blocks[x, y + 1, z] == null) : (chunk.neighbours.top?.created == true && chunk.neighbours.top.blocks[x, 0, z] == null);
+        var hasBottom = (y > 0) ? (chunk.blocks[x, y - 1, z] == null) : (chunk.neighbours.bottom?.created == true && chunk.neighbours.bottom.blocks[x, max, z] == null);
+        var hasLeft = (x > 0) ? (chunk.blocks[x - 1, y, z] == null) : (chunk.neighbours.right?.created == true && chunk.neighbours.right.blocks[max, y, z] == null);
+        var hasRight = (x < max) ? (chunk.blocks[x + 1, y, z] == null) : (chunk.neighbours.left?.created == true && chunk.neighbours.left.blocks[0, y, z] == null);
 
 
         bool myHasBack;

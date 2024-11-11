@@ -107,9 +107,6 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetMouseButtonDown(1))
             {
-                
-
-
                 coordinates = hit.point + hit.normal / 2;
 
                 int gX = Mathf.RoundToInt(coordinates.x);
@@ -125,8 +122,6 @@ public class PlayerController : MonoBehaviour
                 localCoordinatesInt.x = x; localCoordinatesInt.y = y; localCoordinatesInt.z = z;
 
                 world.GetChunkByGlobalBlockCoordinates(globalCoordinatesInt).ResetBlock(localCoordinatesInt, block);
-
-                //chunk.ResetBlock(localCoordinatesInt, block);
             }
         }
     }

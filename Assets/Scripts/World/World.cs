@@ -110,7 +110,7 @@ public class World : MonoBehaviour
 
     void Update()
     {
-        var currentPlayerChunk = this.WorldCoordinateToChunk(Player.main.transform.position);
+        /*var currentPlayerChunk = this.WorldCoordinateToChunk(Player.main.transform.position);
 
         if (this.lastPlayerChunk != currentPlayerChunk)
         {
@@ -118,7 +118,11 @@ public class World : MonoBehaviour
 
             this.DestroyOutOfRangeChunks();
             StartCoroutine(this.GenerateChunksTask());
-        }
+        }*/
+
+        Vector3 playerPos = Player.main.transform.position;
+        DestroyOutOfRangeChunks(playerPos);
+        StartCoroutine(this.GenerateChunksTask());
     }
 
 
@@ -270,21 +274,55 @@ public class World : MonoBehaviour
 
 
 
-    private void DestroyOutOfRangeChunks()
-    {
-        var toUnloadChunks = new List<Vector3Int>();
-
-
-        foreach (var chunk in chunks.Values)
+    /*    private void DestroyOutOfRangeChunks()
         {
-            if (this.IsOutOfRange(chunk.coordinates) && chunk.gameObject != null)
-            {
+            var toRemove = new List<Vector3Int>();
 
-                Destroy(chunk.gameObject);
+            foreach (var chunk in chunks.Values)
+            {
+                var coordinates = chunk.coordinates;
+                if (this.IsOutOfRange(coordinates))
+                {
+                    Destroy(chunk.gameObject);
+                    toRemove.Add(coordinates);
+                }
+            }
+
+            foreach (var i in toRemove)
+            {
+                this.chunks.Remove(i);
+            }
+
+        }*/
+
+    private void DestroyOutOfRangeChunks(Vector3 playerPosition)
+    {
+        foreach (var T in chunks)
+        {
+            Vector3Int chunkCoordinates = T.Key;
+            Chunk chunk = T.Value;
+
+            float distance = Vector3.Distance(playerPosition, chunk.transform.position);
+
+            if (distance > viewDistance)
+            {
+                if (chunk.created)
+                {
+                    chunk.OnDisableChunk();
+                }
+            }
+            else
+            {
+                if (!chunk.created)
+                {
+                    chunk.OnEnableChunk();
+                }
             }
         }
-
     }
+
+
+
 
     private bool IsOutOfRange(Vector3Int chunkCoordinates)
     {
@@ -349,7 +387,6 @@ public class World : MonoBehaviour
         });
 
     }
-
 
 
 
@@ -582,6 +619,43 @@ public class World : MonoBehaviour
         return this.CreateChunk(coordinates);
     }
 
+    //
+    public Chunk GetOrCreateChunk(Vector3Int coordinates)
+    {
+        if (chunks.TryGetValue(coordinates, out Chunk chunk))
+        {
+            return chunk;
+        }
+
+        GameObject chunkObj = Instantiate(ChunkPrefab, coordinates * Chunk.Size, Quaternion.identity, transform);
+        chunk = chunkObj.GetComponent<Chunk>();
+        chunk.coordinates = coordinates;
+        chunk.Init();
+
+
+        chunks[coordinates] = chunk;
+
+        return chunk;
+    }
+
+
+
+    public void EnableChunk(Vector3Int coordinates)
+    {
+        if (chunks.ContainsKey(coordinates))
+        {
+            chunks[coordinates].OnEnableChunk();
+        }
+    }
+    public void DisableChunk(Vector3Int coordinates)
+    {
+        if (chunks.ContainsKey(coordinates))
+        {
+            chunks[coordinates].OnDisableChunk();
+        }
+    }
+    //
+
     public Chunk GetChunkNoCheck(Vector3Int coordinates)
     {
         return this.chunks.TryGetValue(coordinates, out var chunk) ? chunk : null;
@@ -593,44 +667,12 @@ public class World : MonoBehaviour
         {
             var chunkCoordinates = coordinates * Chunk.Size;
 
-<<<<<<< HEAD
-            BlockScriptableObject[,,] blocks = new BlockScriptableObject[Chunk.Size, Chunk.Size, Chunk.Size];
-
-            Chunk chunk = null;
-            GameObject obj = null;
-
-            obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
-
-
-
-            if (chunks.TryGetValue(coordinates, out var existingChunk) && existingChunk != null)
-            {
-                obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
-                chunk.blocks = existingChunk.blocks;
-                chunk.neighbours = new ChunkNeighbours(this, chunk.coordinates);
-            }
-            else
-            {
-
-            obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
-            chunk = obj.GetComponent<Chunk>();
-                chunk.coordinates = coordinates;
-
-
-            chunk.neighbours = new ChunkNeighbours(this, chunk.coordinates);
-                chunk.Init();
-
-                this.chunks.Add(coordinates, chunk);
-
-                return chunk;
-            }
-=======
             var obj = Instantiate(ChunkPrefab, chunkCoordinates, Quaternion.identity, this.transform);
->>>>>>> parent of bef2c72 (18/14)
 
             var chunk = obj.GetComponent<Chunk>();
             chunk.coordinates = coordinates;
 
+            this.chunks.Add(coordinates, chunk);
 
         }
         return null;

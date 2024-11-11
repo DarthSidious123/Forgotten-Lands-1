@@ -105,7 +105,24 @@ public class Chunk : MonoBehaviour
 
 
 
+    public void OnEnableChunk()
+    {
+        this.renderer.enabled = true;
+        this.collider.enabled = true;
 
+        this.created = true;
+
+        this.StartFirstRender();
+    }
+    public void OnDisableChunk()
+    {
+        this.renderer.enabled = false;
+        this.collider.enabled = false;
+
+        this.world.chunks[this.coordinates] = this;
+
+        this.created = false;
+    }
 
 
 
@@ -127,23 +144,7 @@ public class Chunk : MonoBehaviour
                 int landscapeHeight = 0;
                 List<int> heights2D = new List<int>();
 
-                /*
-                float landscapeValue = GetLandscapeNoise(worldX, worldZ);
 
-                
-                
-                if (landscapeValue < 0.5f)
-                {
-                    landscapeHeight = GetHeight2D(0, worldX, worldZ);
-                }
-                if (landscapeValue > 0.5f)
-                {
-                    landscapeHeight = GetHeight2D(1, worldX, worldZ);
-                }
-                
-
-
-                */
                 landscapeHeight = GetTerrain(worldX, worldZ);
 
 
@@ -151,7 +152,10 @@ public class Chunk : MonoBehaviour
                 {
                     int worldY = y + worldCoordinates.y;
 
-
+                    if (this.blocks[x, y, z] != null)
+                    {
+                        continue;
+                    }
 
                     //3D Noises
 
@@ -187,8 +191,9 @@ public class Chunk : MonoBehaviour
                 }
             }
         }
-        created = true;
+        this.created = true;
 
+        
  
         this.StartFirstRender();
     }
@@ -395,9 +400,6 @@ public class Chunk : MonoBehaviour
         int x = Chunk.CorrectBlockCoordinate(coordinates.x);
         int y = Chunk.CorrectBlockCoordinate(coordinates.y);
         int z = Chunk.CorrectBlockCoordinate(coordinates.z);
-
-
-
 
 
         this.blocks[x, y, z] = block;

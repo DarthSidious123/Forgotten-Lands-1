@@ -41,10 +41,16 @@ public class World : MonoBehaviour
     public float terrainBlenderFrequency = 0.5f, mountainBlenderFrequency = 0.5f, mountainThreshold = 0.6f;
 
 
+    [Space(25)]
 
+    [Header("Rivers settings")]
 
+    public FastNoise2DSettingsSO riverSettings;
 
-
+    public bool generateRivers = true;
+    [Range(0f, 25f)]
+    public float riverThreshold = 0, riverWidth = 0;
+    public FastNoiseLite riverNoise;
 
     [Space(25)]
 
@@ -110,7 +116,7 @@ public class World : MonoBehaviour
 
     void Update()
     {
-        /*var currentPlayerChunk = this.WorldCoordinateToChunk(Player.main.transform.position);
+        var currentPlayerChunk = this.WorldCoordinateToChunk(Player.main.transform.position);
 
         if (this.lastPlayerChunk != currentPlayerChunk)
         {
@@ -118,10 +124,10 @@ public class World : MonoBehaviour
 
             this.DestroyOutOfRangeChunks();
             StartCoroutine(this.GenerateChunksTask());
-        }*/
+        }
 
         Vector3 playerPos = Player.main.transform.position;
-        DestroyOutOfRangeChunks(playerPos);
+        //DestroyOutOfRangeChunks(playerPos);
         StartCoroutine(this.GenerateChunksTask());
     }
 
@@ -201,6 +207,18 @@ public class World : MonoBehaviour
             plateauMountainNoise.SetFractalGain(0.5f);
         }
 
+        if (riverSettings != null)
+        {
+            riverNoise = new FastNoiseLite((int)(seed));
+            riverNoise.SetNoiseType(riverSettings.noiseType);
+            riverNoise.SetFrequency(riverSettings.frequency);
+
+            riverNoise.SetFractalType(riverSettings.fractalType);
+            riverNoise.SetFractalOctaves(riverSettings.octaves);
+            riverNoise.SetFractalLacunarity(2);
+            riverNoise.SetFractalGain(0.5f);
+        }
+
 
 
         terrainBlenderNoise = new FastNoiseLite((int)(seed));
@@ -215,12 +233,7 @@ public class World : MonoBehaviour
         mountainBlenderNoise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
         mountainBlenderNoise.SetFrequency(mountainBlenderFrequency);
 
-        /*
-        terrainBlenderNoise.SetFractalType(terrainBlenderSettings.fractalType);
-        terrainBlenderNoise.SetFractalOctaves(terrainBlenderSettings.octaves);
-        terrainBlenderNoise.SetFractalLacunarity(2);
-        terrainBlenderNoise.SetFractalGain(0.5f);
-        */
+
     }
 
 
@@ -274,26 +287,26 @@ public class World : MonoBehaviour
 
 
 
-    /*    private void DestroyOutOfRangeChunks()
+    private void DestroyOutOfRangeChunks()
+    {
+        var toRemove = new List<Vector3Int>();
+
+        foreach (var chunk in chunks.Values)
         {
-            var toRemove = new List<Vector3Int>();
-
-            foreach (var chunk in chunks.Values)
+            var coordinates = chunk.coordinates;
+            if (this.IsOutOfRange(coordinates))
             {
-                var coordinates = chunk.coordinates;
-                if (this.IsOutOfRange(coordinates))
-                {
-                    Destroy(chunk.gameObject);
-                    toRemove.Add(coordinates);
-                }
+                Destroy(chunk.gameObject);
+                toRemove.Add(coordinates);
             }
+        }
 
-            foreach (var i in toRemove)
-            {
-                this.chunks.Remove(i);
-            }
+        foreach (var i in toRemove)
+        {
+            this.chunks.Remove(i);
+        }
 
-        }*/
+    }
 
     private void DestroyOutOfRangeChunks(Vector3 playerPosition)
     {

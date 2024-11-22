@@ -28,3 +28,6 @@ MonoBehaviour:
   - name: Bedrock
     id: bedrock
     block: {fileID: 11400000, guid: 0fde0150f14244141b989d0cac21c68b, type: 2}
+  - name: Sand
+    id: sand
+    block: {fileID: 11400000, guid: 7199caab45ca9484f99ee70a3332e82c, type: 2}

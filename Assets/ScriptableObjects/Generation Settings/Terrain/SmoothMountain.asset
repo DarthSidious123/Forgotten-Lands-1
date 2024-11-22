@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: SmoothMountain
   m_EditorClassIdentifier: 
   noiseType: 3
-  frequency: 0.0001
-  amplitude: 200
+  frequency: 0.001
+  amplitude: 500
   fractalType: 1
   octaves: 3
   scale: 50

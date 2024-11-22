@@ -47,8 +47,6 @@ public class Chunk : MonoBehaviour
     private Bounds bounds;
 
 
-
-
     void Awake()
     {
         //surface = GetComponent<NavMeshSurface>();
@@ -148,6 +146,13 @@ public class Chunk : MonoBehaviour
                 landscapeHeight = GetTerrain(worldX, worldZ);
 
 
+                //Rivers 
+
+                int riverDepth = 0;
+                bool checkRivers = CheckRivers(worldX, worldZ, out riverDepth, landscapeHeight);
+
+
+
                 for (int y = 0; y < Chunk.Size; y++)
                 {
                     int worldY = y + worldCoordinates.y;
@@ -167,8 +172,18 @@ public class Chunk : MonoBehaviour
 
                     if (worldY == landscapeHeight && checkCaves)
                     {
-                        var block = this.world.blockTable.GetBlock("grass");
-                        this.SetBlock(new Vector3Int(x, y, z), block);
+                        if (checkRivers)
+                        {
+
+
+                            var block = world.blockTable.GetBlock("sand");
+                            SetBlock(new Vector3Int(x, y, z), block);
+                        }
+                        else
+                        {
+                            var block = this.world.blockTable.GetBlock("grass");
+                            this.SetBlock(new Vector3Int(x, y, z), block);
+                        }
                     }
 
                     else if ((worldY < landscapeHeight) && worldY >= (landscapeHeight - 4) && checkCaves)
@@ -199,8 +214,12 @@ public class Chunk : MonoBehaviour
     }
 
 
+
+
+
     int GetTerrain(int worldX, int worldZ)
     {
+
         float planeValue = world.planeNoise.GetNoise(
            worldX * world.planeSettings.scale,
            worldZ * world.planeSettings.scale);
@@ -241,22 +260,12 @@ public class Chunk : MonoBehaviour
 
 
 
-        //float finalValue = sharpMountainValue;
         float finalValue = smoothMountainValue;
 
         if (mountainBlenderValue > 0.5f)
         {
             finalValue = Mathf.Max(smoothMountainValue, mountainBlendedValue);
         }
-
-
-
-
-
-
-
-        
-        
         //
 
 
@@ -264,11 +273,6 @@ public class Chunk : MonoBehaviour
         float terrainBlenderValue = world.terrainBlenderNoise.GetNoise(worldX, worldZ);
 
         terrainBlenderValue = (terrainBlenderValue + 1) / 2;
-
-
-
-
-
 
 
         float blendedValue = Mathf.Lerp(planeValue, finalValue, terrainBlenderValue - world.mountainThreshold);
@@ -310,6 +314,71 @@ public class Chunk : MonoBehaviour
             return true;
         }
     }
+
+
+
+    bool CheckRivers(int worldX, int worldZ, out int riverDepth, int landscapeHeight)
+    {
+        riverDepth = 0;
+
+        if (world.generateRivers)
+        {
+            float riverValue = world.riverNoise.GetNoise(worldX * world.riverSettings.scale, worldZ * world.riverSettings.scale);
+            riverValue = MathF.Abs(riverValue);
+
+            if (landscapeHeight < world.riverThreshold + world.seaLevel)
+            {
+                return true;
+            }
+
+
+            /*
+            float riverValue = world.riverNoise.GetNoise(worldX * world.riverSettings.scale, worldZ * world.riverSettings.scale);
+            riverValue = MathF.Abs(riverValue);
+
+            if (riverValue > world.riverThreshold)
+            {
+                riverDepth = Mathf.FloorToInt(riverValue) * 5;
+                return true;
+            }
+
+            */
+        }
+        return false;
+    }
+
+    bool CheckRivers(int worldX, int worldZ)
+    {
+        if (world.generateRivers)
+        {
+            float riverValue = world.riverNoise.GetNoise(
+                worldX * world.riverSettings.scale,
+                worldZ * world.riverSettings.scale);
+
+            //riverValue = (riverValue + 1) / 2;
+            riverValue = MathF.Abs(riverValue);
+
+
+            if (riverValue < world.riverThreshold)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    //
+    //
+    //
+
+
 
 
 

@@ -143,7 +143,7 @@ public class Chunk : MonoBehaviour
                 List<int> heights2D = new List<int>();
 
 
-                landscapeHeight = GetTerrain(worldX, worldZ);
+                landscapeHeight = GetTerrain(worldX, worldZ, out bool isSharpMountain);
 
 
                 //Rivers 
@@ -174,8 +174,6 @@ public class Chunk : MonoBehaviour
                     {
                         if (checkRivers)
                         {
-
-
                             var block = world.blockTable.GetBlock("sand");
                             SetBlock(new Vector3Int(x, y, z), block);
                         }
@@ -217,8 +215,11 @@ public class Chunk : MonoBehaviour
 
 
 
-    int GetTerrain(int worldX, int worldZ)
+    int GetTerrain(int worldX, int worldZ, out bool isSharpMountain)
     {
+        isSharpMountain = false;
+
+        //
 
         float planeValue = world.planeNoise.GetNoise(
            worldX * world.planeSettings.scale,
@@ -240,7 +241,22 @@ public class Chunk : MonoBehaviour
             worldX * world.sharpMountainSettings.scale,
             worldZ * world.sharpMountainSettings.scale);
 
-        sharpMountainValue = (sharpMountainValue + 1) / 2 * world.sharpMountainSettings.amplitude + world.seaLevel + 75;
+        sharpMountainValue = (sharpMountainValue + 1) / 2 * world.sharpMountainSettings.amplitude + world.seaLevel;
+
+
+        float MountainValue = 0;
+
+        if (smoothMountainValue <= sharpMountainValue)
+        {
+            MountainValue = sharpMountainValue;
+        }
+        else
+        {
+            MountainValue = smoothMountainValue;
+        }
+
+
+
 
 
         float plateauMountainValue = world.plateauMountainNoise.GetNoise(
@@ -250,6 +266,10 @@ public class Chunk : MonoBehaviour
         plateauMountainValue = (plateauMountainValue + 1) / 2 * world.plateauMountainSettings.amplitude + world.seaLevel;
 
 
+
+
+
+        /*
         float mountainBlenderValue = world.mountainBlenderNoise.GetNoise(worldX, worldZ);
 
         mountainBlenderValue = (mountainBlenderValue + 1) / 2;
@@ -267,15 +287,15 @@ public class Chunk : MonoBehaviour
             finalValue = Mathf.Max(smoothMountainValue, mountainBlendedValue);
         }
         //
-
-
+        */
+        
 
         float terrainBlenderValue = world.terrainBlenderNoise.GetNoise(worldX, worldZ);
 
         terrainBlenderValue = (terrainBlenderValue + 1) / 2;
+        
 
-
-        float blendedValue = Mathf.Lerp(planeValue, finalValue, terrainBlenderValue - world.mountainThreshold);
+        float blendedValue = Mathf.Lerp(planeValue, MountainValue, terrainBlenderValue - world.mountainThreshold);
 
 
         return Mathf.FloorToInt(blendedValue);
@@ -283,6 +303,71 @@ public class Chunk : MonoBehaviour
 
     bool CheckCaves(int worldX, int worldY, int worldZ)
     {
+        if (world.generateCaves)
+        {
+            //FALSE IS AIR!!!
+
+            float smallSpaghettiCaveValue = ((world.smallSpaghettiCaves.GetNoise(
+                worldX * world.smallSpaghettiCavesSO.scale,
+                worldY * world.smallSpaghettiCavesSO.scale,
+                worldZ * world.smallSpaghettiCavesSO.scale) + 1) / 2 * world.smallSpaghettiCavesSO.amplitude);
+
+            if (smallSpaghettiCaveValue > 0.5f - world.smallSpaghettiCavesSO.difference &&
+                smallSpaghettiCaveValue < 0.5f + world.smallSpaghettiCavesSO.difference)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+            /*
+
+            int mediumCaveValue = Mathf.FloorToInt(
+                ((world.mediumCaves.GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.mediumCavesSO.amplitude);
+
+
+            int caveBorderValue = Mathf.FloorToInt(
+                ((world.cavesBorders.GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.caveBordersSO.amplitude);
+
+
+
+
+
+
+
+            if (worldX + world.caveBordersSO.offset >= caveBorderValue)
+            {
+                if (smallSpaghettiCaveValue <= world.smallSpaghettiCavesSO.caveTolerancy)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (mediumCaveValue <= world.mediumCavesSO.caveTolerancy)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            */
+        }
+        else
+        {
+            return true;
+        }
+
+
+
+        /*
         if (world.generateCaves)
         {
             List<int> heights3D = new List<int>();
@@ -313,6 +398,7 @@ public class Chunk : MonoBehaviour
         {
             return true;
         }
+        */
     }
 
 
@@ -547,6 +633,8 @@ public class Chunk : MonoBehaviour
     public IEnumerator GenerateMesh()
     {
         this.neighbours.Update();
+        
+
 
         yield return null;
 

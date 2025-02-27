@@ -56,8 +56,20 @@ public class World : MonoBehaviour
 
     [Header("Cave settings")]
 
-    public List<FastNoise3DSettingsSO> caveSettingsList;
     public bool generateCaves = true;
+
+    public List<FastNoise3DSettingsSO> caveSettingsList;
+
+    public FastNoise3DSettingsSO smallSpaghettiCavesSO, mediumCavesSO, bigCavesSO;
+
+    public FastNoiseLite smallSpaghettiCaves, mediumCaves,bigCaves; 
+
+
+
+
+    public FastNoise2DSettingsSO caveBordersSO;
+    public FastNoiseLite cavesBorders;
+
 
     [Space(10)]
 
@@ -89,6 +101,7 @@ public class World : MonoBehaviour
     public GameObject ChunkPrefab;
 
     public Dictionary<Vector3Int, Chunk> chunks = new Dictionary<Vector3Int, Chunk>();
+    //public Dictionary<Vector3Int, Chunk> activeChunks = new Dictionary<Vector3Int, Chunk>();
 
     private Vector3Int lastPlayerChunk;
 
@@ -100,7 +113,7 @@ public class World : MonoBehaviour
     {
         CreateTerrainNoises();
 
-        CreateFastNoiseLite3D();
+        CreateCaveNoises();
         CreateTerrainMap2D();
     }
 
@@ -118,6 +131,7 @@ public class World : MonoBehaviour
     {
         var currentPlayerChunk = this.WorldCoordinateToChunk(Player.main.transform.position);
 
+        
         if (this.lastPlayerChunk != currentPlayerChunk)
         {
             this.lastPlayerChunk = currentPlayerChunk;
@@ -125,6 +139,8 @@ public class World : MonoBehaviour
             this.DestroyOutOfRangeChunks();
             StartCoroutine(this.GenerateChunksTask());
         }
+
+        //DestroyFarChunks();
 
         Vector3 playerPos = Player.main.transform.position;
         //DestroyOutOfRangeChunks(playerPos);
@@ -244,8 +260,9 @@ public class World : MonoBehaviour
 
 
     
-    void CreateFastNoiseLite3D()
+    void CreateCaveNoises()
     {
+        
         foreach (var noise3D in caveSettingsList)
         {
             
@@ -254,6 +271,25 @@ public class World : MonoBehaviour
             noise.SetFrequency(noise3D.frequency);
             noises3D.Add(noise);
             
+        }
+
+        if (caveBordersSO != null)
+        {
+            cavesBorders = new FastNoiseLite((int)seed);
+            cavesBorders.SetNoiseType(caveBordersSO.noiseType);
+            cavesBorders.SetFrequency(caveBordersSO.frequency);
+        }
+        if (smallSpaghettiCavesSO != null)
+        {
+            smallSpaghettiCaves = new FastNoiseLite((int)seed);
+            smallSpaghettiCaves.SetNoiseType(smallSpaghettiCavesSO.noiseType);
+            smallSpaghettiCaves.SetFrequency(smallSpaghettiCavesSO.frequency);
+        }
+        if (mediumCavesSO != null)
+        {
+            mediumCaves = new FastNoiseLite((int)seed);
+            mediumCaves.SetNoiseType(mediumCavesSO.noiseType);
+            mediumCaves.SetFrequency(mediumCavesSO.frequency);
         }
     }
     
@@ -283,8 +319,40 @@ public class World : MonoBehaviour
 
 
 
+    
+    private void DestroyFarChunks()
+    {
+        /*
+        var toRemove = new List<Vector3Int>();
+
+        foreach (var activeChunk in activeChunks.Keys)
+        {
+            if (activeChunk.x + lastPlayerChunk.x >= renderDistance || -activeChunk.x + lastPlayerChunk.x <= -renderDistance)
+            {
+                toRemove.Add(activeChunk);
+            }
+            else if (activeChunk.y + lastPlayerChunk.y >= renderDistance || -activeChunk.y + lastPlayerChunk.y <= -renderDistance)
+            {
+                toRemove.Add(activeChunk);
+            }
+            else if (activeChunk.z + lastPlayerChunk.z >= renderDistance || -activeChunk.z + lastPlayerChunk.z <= -renderDistance)
+            {
+                toRemove.Add(activeChunk);
+            }
+        }
 
 
+        foreach (var chunkPos in toRemove)
+        {
+            activeChunks.TryGetValue(chunkPos, out var chunk);
+            Destroy(chunk.gameObject);
+            activeChunks.Remove(chunkPos);
+        }
+
+        toRemove.Clear();
+        */
+        
+    }
 
 
     private void DestroyOutOfRangeChunks()
@@ -405,193 +473,34 @@ public class World : MonoBehaviour
 
     private IEnumerator GenerateChunks()
     {
-        var radius = this.renderDistance;
-        var center = this.lastPlayerChunk;
+        Vector3Int center = lastPlayerChunk;
+        List<Vector3Int> chunksToGenerate = new List<Vector3Int>();
 
-        this.GenerateChunkIfInRange(center);
-        for (int i = 1; i <= radius; i++)
+        for (int x = -renderDistance; x <= renderDistance; x++)
         {
-            this.GenerateChunkIfInRange(new Vector3Int(i, 0, 0) + center);
-            this.GenerateChunkIfInRange(new Vector3Int(-i, 0, 0) + center);
-            this.GenerateChunkIfInRange(new Vector3Int(0, i, 0) + center);
-            this.GenerateChunkIfInRange(new Vector3Int(0, -i, 0) + center);
-            this.GenerateChunkIfInRange(new Vector3Int(0, 0, i) + center);
-            this.GenerateChunkIfInRange(new Vector3Int(0, 0, -i) + center);
-
-            yield return UnityEngine.Random.Range(minDelay, minDelay);
-
-            for (int j = 1; j <= i; j++)
+            for (int y = -renderDistance; y <= renderDistance; y++)
             {
-                // +x
-                this.GenerateChunkIfInRange(new Vector3Int(i, j, 0) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(i, -j, 0) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(i, 0, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(i, 0, -j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(i, j, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(i, -j, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(i, j, -j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(i, -j, -j) + center);
-
-                yield return UnityEngine.Random.Range(minDelay, minDelay);
-
-                // -x
-                this.GenerateChunkIfInRange(new Vector3Int(-i, j, 0) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-i, -j, 0) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-i, 0, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-i, 0, -j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-i, j, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-i, -j, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-i, j, -j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-i, -j, -j) + center);
-
-                yield return UnityEngine.Random.Range(minDelay, minDelay);
-
-                // +z
-                this.GenerateChunkIfInRange(new Vector3Int(0, j, i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(0, -j, i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, 0, i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, 0, i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, j, i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, -j, i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, j, i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, -j, i) + center);
-
-                yield return UnityEngine.Random.Range(minDelay, minDelay);
-
-                // -z
-                this.GenerateChunkIfInRange(new Vector3Int(0, j, -i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(0, -j, -i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, 0, -i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, 0, -i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, j, -i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, -j, -i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, j, -i) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, -j, -i) + center);
-
-                yield return UnityEngine.Random.Range(minDelay, minDelay);
-
-                
-                // +y
-                this.GenerateChunkIfInRange(new Vector3Int(0, i, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(0, i, -j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, i, 0) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, i, 0) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, i, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, i, -j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, i, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, i, -j) + center);
-
-                yield return UnityEngine.Random.Range(minDelay, minDelay);
-
-                // -y
-                this.GenerateChunkIfInRange(new Vector3Int(0, -i, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(0, -i, -j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, -i, 0) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, -i, 0) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, -i, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(j, -i, -j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, -i, j) + center);
-                this.GenerateChunkIfInRange(new Vector3Int(-j, -i, -j) + center);
-
-                yield return UnityEngine.Random.Range(minDelay, minDelay);
-                
-                
-                // +x
-                for (int k = 1; k < j; k++)
+                for (int z = -renderDistance; z <= renderDistance; z++)
                 {
-                    this.GenerateChunkIfInRange(new Vector3Int(i, j, k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(i, -j, k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(i, j, -k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(i, -j, -k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(i, k, j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(i, -k, j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(i, k, -j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(i, -k, -j) + center);
+                    Vector3Int chunkPos = center + new Vector3Int(x, y, z);
 
-                    yield return UnityEngine.Random.Range(minDelay, minDelay);
+                    if (!chunks.ContainsKey(chunkPos) && Vector3Int.Distance(chunkPos, center) <= renderDistance)
+                    {
+                        chunksToGenerate.Add(chunkPos);
+                    }
                 }
-
-                // -x
-                for (int k = 1; k < j; k++)
-                {
-                    this.GenerateChunkIfInRange(new Vector3Int(-i, j, k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-i, -j, k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-i, j, -k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-i, -j, -k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-i, k, j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-i, -k, j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-i, k, -j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-i, -k, -j) + center);
-
-                    yield return UnityEngine.Random.Range(minDelay, minDelay);
-                }
-
-                // +z
-                for (int k = 1; k < j; k++)
-                {
-                    this.GenerateChunkIfInRange(new Vector3Int(k, j, i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(k, -j, i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-k, j, i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-k, -j, i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(j, k, i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(j, -k, i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-j, k, i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-j, -k, i) + center);
-
-                    yield return UnityEngine.Random.Range(minDelay, minDelay);
-                }
-
-                // -z
-                for (int k = 1; k < j; k++)
-                {
-                    this.GenerateChunkIfInRange(new Vector3Int(k, j, -i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(k, -j, -i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-k, j, -i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-k, -j, -i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(j, k, -i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(j, -k, -i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-j, k, -i) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-j, -k, -i) + center);
-
-                    yield return UnityEngine.Random.Range(minDelay, minDelay);
-                }
-
-                
-                // +y
-                for (int k = 1; k < j; k++)
-                {
-                    this.GenerateChunkIfInRange(new Vector3Int(k, i, j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(k, i, -j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-k, i, j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-k, i, -j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(j, i, k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(j, i, -k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-j, i, k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-j, i, -k) + center);
-
-                    yield return UnityEngine.Random.Range(minDelay, minDelay);
-                }
-
-                // -y
-                for (int k = 1; k < j; k++)
-                {
-                    this.GenerateChunkIfInRange(new Vector3Int(k, -i, j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(k, -i, -j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-k, -i, j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-k, -i, -j) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(j, -i, k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(j, -i, -k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-j, -i, k) + center);
-                    this.GenerateChunkIfInRange(new Vector3Int(-j, -i, -k) + center);
-
-                    yield return UnityEngine.Random.Range(minDelay, minDelay);
-
-                }
-                
-                
             }
+        }
 
-            yield return UnityEngine.Random.Range(minDelay, minDelay);
+        chunksToGenerate.Sort((a, b) => Vector3Int.Distance(center, a).CompareTo(Vector3Int.Distance(center, b)));
+
+        foreach (var chunkPos in chunksToGenerate)
+        {
+            if (!chunks.ContainsKey(chunkPos))
+            {
+                CreateChunk(chunkPos);
+            }
+            yield return null;
         }
     }
 
@@ -686,7 +595,7 @@ public class World : MonoBehaviour
             chunk.coordinates = coordinates;
 
             this.chunks.Add(coordinates, chunk);
-
+            //activeChunks.Add(coordinates, chunk);
         }
         return null;
     }

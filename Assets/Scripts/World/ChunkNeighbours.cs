@@ -36,11 +36,40 @@ public class ChunkNeighbours
 
     public void Update()
     {
+        Chunk rawChunk;
+
+        if (world.chunks.TryGetValue(frontCoordinates, out rawChunk))
+        {
+            front = world.GetChunkNoCheck(frontCoordinates);
+        }
+        if (world.chunks.TryGetValue(backCoordinates, out rawChunk))
+        {
+            back = world.GetChunkNoCheck(backCoordinates);
+        }
+        if (world.chunks.TryGetValue(topCoordinates, out rawChunk))
+        {
+            top = world.GetChunkNoCheck(topCoordinates);
+        }
+        if (world.chunks.TryGetValue(bottomCoordinates, out rawChunk))
+        {
+            bottom = world.GetChunkNoCheck(bottomCoordinates);
+        }
+        if (world.chunks.TryGetValue(leftCoordinates, out rawChunk))
+        {
+            left = world.GetChunkNoCheck(leftCoordinates);
+        }
+        if (world.chunks.TryGetValue(rightCoordinates, out rawChunk))
+        {
+            right = world.GetChunkNoCheck(rightCoordinates);
+        }
+
+        /*
         this.front = this.world.GetChunkNoCheck(this.frontCoordinates);
         this.back = this.world.GetChunkNoCheck(this.backCoordinates);
         this.top = this.world.GetChunkNoCheck(this.topCoordinates);
         this.bottom = this.world.GetChunkNoCheck(this.bottomCoordinates);
         this.left = this.world.GetChunkNoCheck(this.leftCoordinates);
         this.right = this.world.GetChunkNoCheck(this.rightCoordinates);
+        */
     }
 }

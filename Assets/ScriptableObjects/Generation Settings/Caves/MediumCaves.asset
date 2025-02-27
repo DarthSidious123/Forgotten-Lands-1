@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: MediumCaves
   m_EditorClassIdentifier: 
   noiseType: 3
-  frequency: 0.01
-  amplitude: 19.5
-  caveTolerancy: 13
+  frequency: 0.1
+  amplitude: 18
+  scale: 50
+  fractalType: 0
+  octaves: 1
+  caveTolerancy: 0
+  difference: 0.5
+  caveType: 0

@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    public void BreackBlock()
+    public void BreakBlock()
     {
         if (Input.GetMouseButtonDown(0))
         {

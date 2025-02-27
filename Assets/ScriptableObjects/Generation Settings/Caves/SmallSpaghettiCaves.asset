@@ -10,9 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 954b6de447bc0614f925283863cab535, type: 3}
-  m_Name: SmallCaves
+  m_Name: SmallSpaghettiCaves
   m_EditorClassIdentifier: 
   noiseType: 3
-  frequency: 0.05
-  amplitude: 18
-  caveTolerancy: 12.5
+  frequency: 0.001
+  amplitude: 0.9
+  scale: 25
+  fractalType: 0
+  octaves: 1
+  caveTolerancy: 64.3
+  difference: 0.02
+  caveType: 1

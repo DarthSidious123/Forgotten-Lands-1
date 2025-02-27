@@ -7,10 +7,13 @@ public class FastNoiseSettingsSO : ScriptableObject
 {
     public FastNoiseLite.NoiseType noiseType = FastNoiseLite.NoiseType.Perlin;
 
+    [Header("Main")]
+
     [Range(0f, 1f)]
     public float frequency;
     public float amplitude;
 
+    public int scale = 1;
 
     [Header("Octaves")]
 

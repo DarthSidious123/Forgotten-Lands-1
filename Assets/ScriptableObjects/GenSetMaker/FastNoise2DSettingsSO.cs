@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "FastNoise Settings/2D")]
 public class FastNoise2DSettingsSO : FastNoiseSettingsSO
 {
-    public int scale = 50;
+    public int offset = 0;
 }

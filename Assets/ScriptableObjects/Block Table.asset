@@ -31,3 +31,9 @@ MonoBehaviour:
   - name: Sand
     id: sand
     block: {fileID: 11400000, guid: 7199caab45ca9484f99ee70a3332e82c, type: 2}
+  - name: SavannaGrass
+    id: savannaGrass
+    block: {fileID: 11400000, guid: 4b99935e2c207c540a2b97ada72b9eb9, type: 2}
+  - name: TaigaGrass
+    id: taigaGrass
+    block: {fileID: 11400000, guid: 4b99935e2c207c540a2b97ada72b9eb9, type: 2}

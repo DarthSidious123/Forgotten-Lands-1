@@ -13,7 +13,7 @@ public class FastNoiseSettingsSO : ScriptableObject
     public float frequency;
     public float amplitude;
 
-    public int scale = 1;
+    public int scaleXZ = 1, scaleY = 1;
 
     [Header("Octaves")]
 

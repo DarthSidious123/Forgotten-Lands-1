@@ -172,22 +172,38 @@ public class Chunk : MonoBehaviour
 
                     if (worldY == landscapeHeight && checkCaves)
                     {
-                        if (checkRivers)
+                        if (isSharpMountain)
                         {
-                            var block = world.blockTable.GetBlock("sand");
+                            var block = world.blockTable.GetBlock("stone");
                             SetBlock(new Vector3Int(x, y, z), block);
                         }
                         else
                         {
-                            var block = this.world.blockTable.GetBlock("grass");
-                            this.SetBlock(new Vector3Int(x, y, z), block);
+                            if (checkRivers)
+                            {
+                                var block = world.blockTable.GetBlock("sand");
+                                SetBlock(new Vector3Int(x, y, z), block);
+                            }
+                            else
+                            {
+                                var block = this.world.blockTable.GetBlock("grass");
+                                this.SetBlock(new Vector3Int(x, y, z), block);
+                            }
                         }
                     }
 
                     else if ((worldY < landscapeHeight) && worldY >= (landscapeHeight - 4) && checkCaves)
                     {
-                        var block = this.world.blockTable.GetBlock("dirt");
-                        this.SetBlock(new Vector3Int(x, y, z), block);
+                        if (isSharpMountain)
+                        {
+                            var block = this.world.blockTable.GetBlock("stone");
+                            this.SetBlock(new Vector3Int(x, y, z), block);
+                        }
+                        else
+                        {
+                            var block = this.world.blockTable.GetBlock("dirt");
+                            this.SetBlock(new Vector3Int(x, y, z), block);
+                        }
                     }
 
                     else if (worldY <= (landscapeHeight - 4) && (worldY > -World.MaxWorldHeight) && checkCaves)
@@ -222,8 +238,8 @@ public class Chunk : MonoBehaviour
         //
 
         float planeValue = world.planeNoise.GetNoise(
-           worldX * world.planeSettings.scale,
-           worldZ * world.planeSettings.scale);
+           worldX * world.planeSettings.scaleXZ,
+           worldZ * world.planeSettings.scaleXZ);
 
         planeValue = (planeValue + 1) / 2 * world.planeSettings.amplitude + world.seaLevel;
 
@@ -231,17 +247,17 @@ public class Chunk : MonoBehaviour
         //Mountains
 
         float smoothMountainValue = world.smoothMountainNoise.GetNoise(
-            worldX * world.smoothMountainSettings.scale,
-            worldZ * world.smoothMountainSettings.scale);
+            worldX * world.smoothMountainSettings.scaleXZ,
+            worldZ * world.smoothMountainSettings.scaleXZ);
 
         smoothMountainValue = (smoothMountainValue + 1) / 2 * world.smoothMountainSettings.amplitude + world.seaLevel;
 
 
         float sharpMountainValue = world.sharpMountainNoise.GetNoise(
-            worldX * world.sharpMountainSettings.scale,
-            worldZ * world.sharpMountainSettings.scale);
+            worldX * world.sharpMountainSettings.scaleXZ,
+            worldZ * world.sharpMountainSettings.scaleXZ);
 
-        sharpMountainValue = (sharpMountainValue + 1) / 2 * world.sharpMountainSettings.amplitude + world.seaLevel;
+        sharpMountainValue = (sharpMountainValue + 1) / 2 * world.sharpMountainSettings.amplitude + world.sharpMountainSettings.offset + world.seaLevel;
 
 
         float MountainValue = 0;
@@ -260,8 +276,8 @@ public class Chunk : MonoBehaviour
 
 
         float plateauMountainValue = world.plateauMountainNoise.GetNoise(
-            worldX * world.plateauMountainSettings.scale,
-            worldZ * world.plateauMountainSettings.scale);
+            worldX * world.plateauMountainSettings.scaleXZ,
+            worldZ * world.plateauMountainSettings.scaleXZ);
 
         plateauMountainValue = (plateauMountainValue + 1) / 2 * world.plateauMountainSettings.amplitude + world.seaLevel;
 
@@ -297,75 +313,103 @@ public class Chunk : MonoBehaviour
 
         float blendedValue = Mathf.Lerp(planeValue, MountainValue, terrainBlenderValue - world.mountainThreshold);
 
+        if (smoothMountainValue <= sharpMountainValue && terrainBlenderValue > world.mountainThreshold)
+        {
+            isSharpMountain = true;
+        }
+
 
         return Mathf.FloorToInt(blendedValue);
     }
 
-    bool CheckCaves(int worldX, int worldY, int worldZ)
+    private enum BlockOrAir { Air, Block}
+
+    bool CheckCaves(int worldY, int worldX, int worldZ)
     {
         if (world.generateCaves)
         {
             //FALSE IS AIR!!!
 
-            float smallSpaghettiCaveValue = ((world.smallSpaghettiCaves.GetNoise(
-                worldX * world.smallSpaghettiCavesSO.scale,
-                worldY * world.smallSpaghettiCavesSO.scale,
-                worldZ * world.smallSpaghettiCavesSO.scale) + 1) / 2 * world.smallSpaghettiCavesSO.amplitude);
+            int caveBorderValue = Mathf.FloorToInt(
+                ((world.cavesBorders.GetNoise(worldY, worldX, worldZ) + 1) / 2) * world.caveBordersSO.amplitude);
 
-            if (smallSpaghettiCaveValue > 0.5f - world.smallSpaghettiCavesSO.difference &&
-                smallSpaghettiCaveValue < 0.5f + world.smallSpaghettiCavesSO.difference)
+            if (worldY + world.caveBordersSO.offset >= caveBorderValue)
+            {
+                if (CheckCrackCave() == BlockOrAir.Air)
+                {
+                    return false;
+                }
+                else if (CheckCavityCave() == BlockOrAir.Air)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
             {
                 return false;
             }
-            else
-            {
-                return true;
-            }
-            /*
-
-            int mediumCaveValue = Mathf.FloorToInt(
-                ((world.mediumCaves.GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.mediumCavesSO.amplitude);
-
-
-            int caveBorderValue = Mathf.FloorToInt(
-                ((world.cavesBorders.GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.caveBordersSO.amplitude);
-
-
-
-
-
-
-
-            if (worldX + world.caveBordersSO.offset >= caveBorderValue)
-            {
-                if (smallSpaghettiCaveValue <= world.smallSpaghettiCavesSO.caveTolerancy)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (mediumCaveValue <= world.mediumCavesSO.caveTolerancy)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            */
         }
         else
         {
             return true;
         }
 
+        BlockOrAir CheckCrackCave()
+        {
+            float smallSpaghettiCaveValue = ((world.smallCrackCaves.GetNoise(
+                worldY * world.smallCrackCavesSO.scaleY,
+                worldX * world.smallCrackCavesSO.scaleXZ,
+                worldZ * world.smallCrackCavesSO.scaleXZ) + 1) / 2 * world.smallCrackCavesSO.amplitude);
 
+            if (smallSpaghettiCaveValue > 0.5f - world.smallCrackCavesSO.difference &&
+                smallSpaghettiCaveValue < 0.5f + world.smallCrackCavesSO.difference &&
+                CheckCkackLimiter() == BlockOrAir.Air)
+            {
+                return BlockOrAir.Air;
+            }
+            else
+            {
+                return BlockOrAir.Block;
+            }
+        }
+
+        BlockOrAir CheckCkackLimiter()
+        {
+            int smallCrackLimiterValue = Mathf.FloorToInt(((world.smallCrackLimiter.GetNoise(
+                worldY * world.smallCrackLimiterSO.scaleY,
+                worldX * world.smallCrackLimiterSO.scaleXZ,
+                worldZ * world.smallCrackLimiterSO.scaleXZ) + 1) / 2) * world.smallCrackLimiterSO.amplitude);
+
+            if (smallCrackLimiterValue >= world.smallCrackLimiterSO.caveTolerancy)
+            {
+                return BlockOrAir.Air;
+            }
+            else
+            {
+                return BlockOrAir.Block;
+            }
+        }
+
+        BlockOrAir CheckCavityCave()
+        {
+            int smallCavityCaveValue = Mathf.FloorToInt(((world.smallCavityCaves.GetNoise(
+                worldY * world.smallCavityCavesSO.scaleY,
+                worldX * world.smallCavityCavesSO.scaleXZ,
+                worldZ * world.smallCavityCavesSO.scaleXZ) + 1) / 2) * world.smallCavityCavesSO.amplitude);
+
+            if (smallCavityCaveValue >= world.smallCavityCavesSO.caveTolerancy)
+            {
+                return BlockOrAir.Air;
+            }
+            else
+            {
+                return BlockOrAir.Block;
+            }
+        }
 
         /*
         if (world.generateCaves)
@@ -409,7 +453,7 @@ public class Chunk : MonoBehaviour
 
         if (world.generateRivers)
         {
-            float riverValue = world.riverNoise.GetNoise(worldX * world.riverSettings.scale, worldZ * world.riverSettings.scale);
+            float riverValue = world.riverNoise.GetNoise(worldX * world.riverSettings.scaleXZ, worldZ * world.riverSettings.scaleXZ);
             riverValue = MathF.Abs(riverValue);
 
             if (landscapeHeight < world.riverThreshold + world.seaLevel)
@@ -438,8 +482,8 @@ public class Chunk : MonoBehaviour
         if (world.generateRivers)
         {
             float riverValue = world.riverNoise.GetNoise(
-                worldX * world.riverSettings.scale,
-                worldZ * world.riverSettings.scale);
+                worldX * world.riverSettings.scaleXZ,
+                worldZ * world.riverSettings.scaleXZ);
 
             //riverValue = (riverValue + 1) / 2;
             riverValue = MathF.Abs(riverValue);

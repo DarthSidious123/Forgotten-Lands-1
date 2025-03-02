@@ -60,9 +60,9 @@ public class World : MonoBehaviour
 
     public List<FastNoise3DSettingsSO> caveSettingsList;
 
-    public FastNoise3DSettingsSO smallSpaghettiCavesSO, mediumCavesSO, bigCavesSO;
+    public FastNoise3DSettingsSO smallCrackCavesSO, smallCavityCavesSO, smallCrackLimiterSO, mediumCavesSO, bigCavesSO;
 
-    public FastNoiseLite smallSpaghettiCaves, mediumCaves,bigCaves; 
+    public FastNoiseLite smallCrackCaves, smallCavityCaves, smallCrackLimiter, mediumCaves, bigCaves; 
 
 
 
@@ -279,12 +279,26 @@ public class World : MonoBehaviour
             cavesBorders.SetNoiseType(caveBordersSO.noiseType);
             cavesBorders.SetFrequency(caveBordersSO.frequency);
         }
-        if (smallSpaghettiCavesSO != null)
+        if (smallCrackCavesSO != null)
         {
-            smallSpaghettiCaves = new FastNoiseLite((int)seed);
-            smallSpaghettiCaves.SetNoiseType(smallSpaghettiCavesSO.noiseType);
-            smallSpaghettiCaves.SetFrequency(smallSpaghettiCavesSO.frequency);
+            smallCrackCaves = new FastNoiseLite((int)seed);
+            smallCrackCaves.SetNoiseType(smallCrackCavesSO.noiseType);
+            smallCrackCaves.SetFrequency(smallCrackCavesSO.frequency);
         }
+        if (smallCavityCavesSO != null)
+        {
+            smallCavityCaves = new FastNoiseLite((int)seed);
+            smallCavityCaves.SetNoiseType(smallCavityCavesSO.noiseType);
+            smallCavityCaves.SetFrequency(smallCavityCavesSO.frequency);
+        }
+        if (smallCrackLimiterSO != null)
+        {
+            smallCrackLimiter = new FastNoiseLite((int)seed);
+            smallCrackLimiter.SetNoiseType(smallCrackLimiterSO.noiseType);
+            smallCrackLimiter.SetFrequency(smallCrackLimiterSO.frequency);
+        }
+
+
         if (mediumCavesSO != null)
         {
             mediumCaves = new FastNoiseLite((int)seed);

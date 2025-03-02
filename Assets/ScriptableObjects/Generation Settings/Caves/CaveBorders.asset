@@ -15,7 +15,8 @@ MonoBehaviour:
   noiseType: 3
   frequency: 0.25
   amplitude: 7.5
+  scaleXZ: 1
+  scaleY: 1
   fractalType: 0
   octaves: 1
-  scale: 50
-  offset: -64
+  offset: 32

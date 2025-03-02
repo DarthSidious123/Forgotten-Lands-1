@@ -7,7 +7,7 @@ public class FastNoise3DSettingsSO : FastNoiseSettingsSO
 {
     [Header("Cave Settings")]
 
-    [Range(0f, 100f)]
+    [Range(0f, 1f)]
     public float caveTolerancy;
 
     [Range(0f, 0.5f)]

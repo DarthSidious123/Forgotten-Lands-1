@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 954b6de447bc0614f925283863cab535, type: 3}
-  m_Name: BigeCaves
+  m_Name: SmallCrackCaves
   m_EditorClassIdentifier: 
   noiseType: 3
-  frequency: 0.005
-  amplitude: 21.5
-  scaleXZ: 1
-  scaleY: 1
+  frequency: 0.0005
+  amplitude: 1
+  scaleXZ: 50
+  scaleY: 50
   fractalType: 0
   octaves: 1
-  caveTolerancy: 1
-  difference: 0.5
-  caveType: 0
+  caveTolerancy: 0
+  difference: 0.0175
+  caveType: 1

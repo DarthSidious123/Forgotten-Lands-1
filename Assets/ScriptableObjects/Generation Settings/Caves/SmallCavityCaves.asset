@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: SmallCavityCaves
   m_EditorClassIdentifier: 
   noiseType: 3
+  generate: 1
   frequency: 0.001
   amplitude: 1.325
   scaleXZ: 50
   scaleY: 50
   fractalType: 0
   octaves: 1
-  caveTolerancy: 0.25
+  caveTolerancy: 0.175
   difference: 0
-  caveType: 0

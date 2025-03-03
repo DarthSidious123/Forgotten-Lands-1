@@ -9,6 +9,8 @@ public class FastNoiseSettingsSO : ScriptableObject
 
     [Header("Main")]
 
+    public bool generate = true;
+
     [Range(0f, 1f)]
     public float frequency;
     public float amplitude;

@@ -329,120 +329,117 @@ public class Chunk : MonoBehaviour
         if (world.generateCaves)
         {
             //FALSE IS AIR!!!
-
-            int caveBorderValue = Mathf.FloorToInt(
-                ((world.cavesBorders.GetNoise(worldY, worldX, worldZ) + 1) / 2) * world.caveBordersSO.amplitude);
-
-            if (worldY + world.caveBordersSO.offset >= caveBorderValue)
+            if (world.cavesBorders != null)
             {
-                if (CheckCrackCave() == BlockOrAir.Air)
-                {
-                    return false;
-                }
-                else if (CheckCavityCave() == BlockOrAir.Air)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return true;
-        }
+                int caveBorderValue = Mathf.FloorToInt(
+                    ((world.cavesBorders.GetNoise(worldX, worldZ) + 1) / 2) * world.caveBordersSO.amplitude);
 
+                if (worldY + world.caveBordersSO.offset >= caveBorderValue)
+                {
+                    if (CheckCrackCave() == BlockOrAir.Air)
+                    {
+                        return false;
+                    }
+                    if (CheckCavityCave() == BlockOrAir.Air)
+                    {
+                        return false;
+                    }     
+                    if (CheckNoiseWorm() == BlockOrAir.Air)
+                    {
+                        return false;
+                    }  
+                    else return true;
+                }
+                else return false;
+            }
+            else return true;
+        }
+        else return true;
+
+
+        //
         BlockOrAir CheckCrackCave()
         {
-            float smallSpaghettiCaveValue = ((world.smallCrackCaves.GetNoise(
-                worldY * world.smallCrackCavesSO.scaleY,
-                worldX * world.smallCrackCavesSO.scaleXZ,
-                worldZ * world.smallCrackCavesSO.scaleXZ) + 1) / 2 * world.smallCrackCavesSO.amplitude);
+            if (world.smallCrackCaves != null && world.smallCrackCavesSO.generate)
+            {
+                float smallCrackCaveValue = ((world.smallCrackCaves.GetNoise(
+                    worldX * world.smallCrackCavesSO.scaleXZ,
+                    worldY * world.smallCrackCavesSO.scaleY,
+                    worldZ * world.smallCrackCavesSO.scaleXZ) + 1) / 2 * world.smallCrackCavesSO.amplitude);
 
-            if (smallSpaghettiCaveValue > 0.5f - world.smallCrackCavesSO.difference &&
-                smallSpaghettiCaveValue < 0.5f + world.smallCrackCavesSO.difference &&
-                CheckCkackLimiter() == BlockOrAir.Air)
-            {
-                return BlockOrAir.Air;
+                if (smallCrackCaveValue > 0.5f - world.smallCrackCavesSO.difference &&
+                    smallCrackCaveValue < 0.5f + world.smallCrackCavesSO.difference &&
+                    CheckCkackLimiter() == BlockOrAir.Air)
+                {
+                    return BlockOrAir.Air;
+                }
+                else return BlockOrAir.Block;
             }
-            else
-            {
-                return BlockOrAir.Block;
-            }
+            else return BlockOrAir.Block;
         }
 
         BlockOrAir CheckCkackLimiter()
         {
-            int smallCrackLimiterValue = Mathf.FloorToInt(((world.smallCrackLimiter.GetNoise(
-                worldY * world.smallCrackLimiterSO.scaleY,
-                worldX * world.smallCrackLimiterSO.scaleXZ,
-                worldZ * world.smallCrackLimiterSO.scaleXZ) + 1) / 2) * world.smallCrackLimiterSO.amplitude);
+            if (world.smallCrackLimiter != null && world.smallCrackLimiterSO.generate)
+            {
+                int smallCrackLimiterValue = Mathf.FloorToInt(((world.smallCrackLimiter.GetNoise(
+                    worldX * world.smallCrackLimiterSO.scaleXZ,
+                    worldY * world.smallCrackLimiterSO.scaleY,
+                    worldZ * world.smallCrackLimiterSO.scaleXZ) + 1) / 2) * world.smallCrackLimiterSO.amplitude);
 
-            if (smallCrackLimiterValue >= world.smallCrackLimiterSO.caveTolerancy)
-            {
-                return BlockOrAir.Air;
+                if (smallCrackLimiterValue >= world.smallCrackLimiterSO.caveTolerancy)
+                {
+                    return BlockOrAir.Air;
+                }
+                else return BlockOrAir.Block;
             }
-            else
-            {
-                return BlockOrAir.Block;
-            }
+            else return BlockOrAir.Block;
         }
+        //
 
         BlockOrAir CheckCavityCave()
         {
-            int smallCavityCaveValue = Mathf.FloorToInt(((world.smallCavityCaves.GetNoise(
-                worldY * world.smallCavityCavesSO.scaleY,
+            if (world.smallCavityCaves != null && world.smallCavityCavesSO.generate)
+            {
+                int smallCavityCaveValue = Mathf.FloorToInt(((world.smallCavityCaves.GetNoise(
                 worldX * world.smallCavityCavesSO.scaleXZ,
+                worldY * world.smallCavityCavesSO.scaleY,
                 worldZ * world.smallCavityCavesSO.scaleXZ) + 1) / 2) * world.smallCavityCavesSO.amplitude);
 
-            if (smallCavityCaveValue >= world.smallCavityCavesSO.caveTolerancy)
-            {
-                return BlockOrAir.Air;
+                if (smallCavityCaveValue >= world.smallCavityCavesSO.caveTolerancy)
+                {
+                    return BlockOrAir.Air;
+                }
+                else return BlockOrAir.Block;
             }
-            else
-            {
-                return BlockOrAir.Block;
-            }
+            else return BlockOrAir.Block;
         }
 
-        /*
-        if (world.generateCaves)
+        //
+        BlockOrAir CheckNoiseWorm()
         {
-            List<int> heights3D = new List<int>();
-
-
-            for (int noise3d = 0; noise3d < world.noises3D.Count; noise3d++)
+            if (world.smallWorms != null && world.smallWormsSO.generate)
             {
-                int height3D = Mathf.FloorToInt(
-                    ((world.noises3D[noise3d].GetNoise(worldX, worldY, worldZ) + 1) / 2) * world.caveSettingsList[noise3d].amplitude);
+                float wormHo = ((world.smallWorms.GetNoise(worldX * world.smallWormsSO.scaleXZ, worldZ * world.smallWormsSO.scaleXZ) + 1) / 2 * world.smallWormsSO.amplitude);
 
-                heights3D.Add(height3D);
+                float wormVe = ((world.smallWorms.GetNoise(worldX * world.smallWormsSO.scaleXZ, worldY* world.smallWormsSO.scaleY, worldZ * world.smallWormsSO.scaleXZ) + 1) / 2
+                    * world.smallWormsSO.amplitude);
+
+
+
+                if (wormHo > 0.5f - world.smallWormsSO.differenceHo * world.smallWormsSO.differenceModifier &&
+                    wormHo < 0.5f + world.smallWormsSO.differenceHo * world.smallWormsSO.differenceModifier &&
+                    wormVe > 0.5f - world.smallWormsSO.differenceVe * world.smallWormsSO.differenceModifier &&
+                    wormVe < 0.5f + world.smallWormsSO.differenceVe * world.smallWormsSO.differenceModifier)
+                {
+                    return BlockOrAir.Air;
+                }
+                else return BlockOrAir.Block;
+
             }
-
-
-
-            if (heights3D[0] <= world.caveSettingsList[0].caveTolerancy &&
-                heights3D[1] <= world.caveSettingsList[1].caveTolerancy &&
-                heights3D[2] <= world.caveSettingsList[2].caveTolerancy)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            else return BlockOrAir.Block;
         }
-        else
-        {
-            return true;
-        }
-        */
+        //
     }
 
 

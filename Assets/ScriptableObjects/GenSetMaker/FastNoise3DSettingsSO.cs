@@ -13,8 +13,4 @@ public class FastNoise3DSettingsSO : FastNoiseSettingsSO
     [Range(0f, 0.5f)]
     public float difference = 0;
 
-    public CaveType caveType;
-
-    public enum CaveType { Cheese, Spaghetti }
-
 }

@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "FastNoise Settings/NoiseWorms")]
-public class NoiseWormsSO : FastNoiseSettingsSO
+public class FastNoiseWormsSO : FastNoiseSettingsSO
 {
-
-
-
-
     [Space(10)]
 
     [Range(0f, 0.5f)]

@@ -11,11 +11,12 @@ public class FastNoiseSettingsSO : ScriptableObject
 
     public bool generate = true;
 
+
     [Range(0f, 1f)]
     public float frequency;
     public float amplitude;
 
-    public int scaleXZ = 1, scaleY = 1;
+    public float scaleXZ = 1, scaleY = 1;
 
     [Header("Octaves")]
 

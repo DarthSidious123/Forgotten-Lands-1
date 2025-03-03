@@ -13,17 +13,11 @@ public class World : MonoBehaviour
 
     [Header("Biome Maps settings")]
 
-    public float biomeFrequency = 0.01f;
-    public float biomeAmplitude = 10f;
-    public FastNoiseLite.NoiseType biomeNoiseType = FastNoiseLite.NoiseType.Perlin;
+    public bool generateBiomes = true;
 
-    public int biomeOctaves = 1;
-    public FastNoiseLite.FractalType biomeFractalType = FastNoiseLite.FractalType.None;
+    public FastNoise2DSettingsSO temperatureMapSO, wetMapSO;
 
-
-
-
-    public FastNoiseLite landscapeMap, temperatureMap, wetMap;
+    public FastNoiseLite temperatureMap, wetMap;
 
 
     [Space(25)]
@@ -63,7 +57,7 @@ public class World : MonoBehaviour
     public FastNoiseLite smallCrackCaves, smallCavityCaves, smallCrackLimiter, mediumCaves, bigCaves;
 
 
-    public NoiseWormsSO smallWormsSO;
+    public FastNoiseWormsSO smallWormsSO;
     public FastNoiseLite smallWorms;
 
     public FastNoise2DSettingsSO caveBordersSO;
@@ -72,12 +66,10 @@ public class World : MonoBehaviour
 
     [Space(10)]
 
+    public bool generateRocks = true;
+    public FastNoise3DSettingsSO BaseRockSO;
+    public FastNoiseLite BaseRock;
 
-    public List<FastNoiseLite> noises2D = new List<FastNoiseLite>();
-    public List<FastNoiseLite> noises3D = new List<FastNoiseLite>();
-
-
- 
 
 
     [Header("World Gen - Noise")]
@@ -113,7 +105,6 @@ public class World : MonoBehaviour
         CreateTerrainNoises();
 
         CreateCaveNoises();
-        CreateTerrainMap2D();
     }
 
     void Start()
@@ -147,91 +138,39 @@ public class World : MonoBehaviour
     }
 
 
-
-
-
-
-
     //
     //
     //
-
-    void CreateTerrainMap2D()
-    {
-        landscapeMap = new FastNoiseLite((int)seed);
-
-        landscapeMap.SetNoiseType(biomeNoiseType);
-        landscapeMap.SetFrequency(biomeFrequency);
-
-        landscapeMap.SetFractalType(biomeFractalType);
-        landscapeMap.SetFractalOctaves(biomeOctaves);
-        landscapeMap.SetFractalLacunarity(2f);
-        landscapeMap.SetFractalGain(0.5f);
-    }
 
     void CreateTerrainNoises()
     {
         if (planeSettings != null)
         {
-            planeNoise = new FastNoiseLite((int)(seed));
-
-            planeNoise.SetNoiseType(planeSettings.noiseType);
-            planeNoise.SetFrequency(planeSettings.frequency);
-
-            planeNoise.SetFractalType(planeSettings.fractalType);
-            planeNoise.SetFractalOctaves(planeSettings.octaves);
-            planeNoise.SetFractalLacunarity(2);
-            planeNoise.SetFractalGain(0.5f);
+            planeNoise = FastCreate2dNoise(planeSettings);
         }
-
         if (sharpMountainSettings != null)
         {
-            sharpMountainNoise = new FastNoiseLite((int)(seed));
-
-            sharpMountainNoise.SetNoiseType(sharpMountainSettings.noiseType);
-            sharpMountainNoise.SetFrequency(sharpMountainSettings.frequency);
-
-            sharpMountainNoise.SetFractalType(sharpMountainSettings.fractalType);
-            sharpMountainNoise.SetFractalOctaves(sharpMountainSettings.octaves);
-            sharpMountainNoise.SetFractalLacunarity(2);
-            sharpMountainNoise.SetFractalGain(0.5f);
+            sharpMountainNoise = FastCreate2dNoise(sharpMountainSettings);
         }
-
         if (smoothMountainSettings != null)
         {
-            smoothMountainNoise = new FastNoiseLite((int)(seed));
-
-            smoothMountainNoise.SetNoiseType(smoothMountainSettings.noiseType);
-            smoothMountainNoise.SetFrequency(smoothMountainSettings.frequency);
-
-            smoothMountainNoise.SetFractalType(smoothMountainSettings.fractalType);
-            smoothMountainNoise.SetFractalOctaves(smoothMountainSettings.octaves);
-            smoothMountainNoise.SetFractalLacunarity(2);
-            smoothMountainNoise.SetFractalGain(0.5f);
+            smoothMountainNoise = FastCreate2dNoise(smoothMountainSettings);
         }
-
         if (plateauMountainSettings != null)
         {
             plateauMountainNoise = new FastNoiseLite((int)(seed));
-            plateauMountainNoise.SetNoiseType(plateauMountainSettings.noiseType);
-            plateauMountainNoise.SetFrequency(plateauMountainSettings.frequency);
-
-            plateauMountainNoise.SetFractalType(plateauMountainSettings.fractalType);
-            plateauMountainNoise.SetFractalOctaves(plateauMountainSettings.octaves);
-            plateauMountainNoise.SetFractalLacunarity(2);
-            plateauMountainNoise.SetFractalGain(0.5f);
         }
+
 
         if (riverSettings != null)
         {
-            riverNoise = new FastNoiseLite((int)(seed));
-            riverNoise.SetNoiseType(riverSettings.noiseType);
-            riverNoise.SetFrequency(riverSettings.frequency);
+            riverNoise = FastCreate2dNoise(riverSettings);
+        }
 
-            riverNoise.SetFractalType(riverSettings.fractalType);
-            riverNoise.SetFractalOctaves(riverSettings.octaves);
-            riverNoise.SetFractalLacunarity(2);
-            riverNoise.SetFractalGain(0.5f);
+
+        if (temperatureMapSO != null)
+        {
+            temperatureMap = FastCreate2dNoise(temperatureMapSO);
         }
 
 
@@ -256,7 +195,19 @@ public class World : MonoBehaviour
 
 
 
+    FastNoiseLite FastCreate2dNoise(FastNoise2DSettingsSO noise2dSO)
+    {
+        FastNoiseLite newNoise = new FastNoiseLite((int)seed);
+        newNoise.SetNoiseType(noise2dSO.noiseType);
+        newNoise.SetFrequency(noise2dSO.frequency);
 
+        newNoise.SetFractalType(noise2dSO.fractalType);
+        newNoise.SetFractalOctaves(noise2dSO.octaves);
+        newNoise.SetFractalLacunarity(2);
+        newNoise.SetFractalGain(0.5f);
+
+        return newNoise;
+    }
 
     
     void CreateCaveNoises()
@@ -275,16 +226,6 @@ public class World : MonoBehaviour
         if (smallCrackCavesSO != null)
         {
             smallCrackCaves = FastCreate3dNoise(smallCrackCavesSO);  
-            /*
-            smallCrackCaves = new FastNoiseLite((int)seed);
-            smallCrackCaves.SetNoiseType(smallCrackCavesSO.noiseType);
-            smallCrackCaves.SetFrequency(smallCrackCavesSO.frequency);
-
-            smallCrackCaves.SetFractalType(smallCrackCavesSO.fractalType);
-            smallCrackCaves.SetFractalOctaves(smallCrackCavesSO.octaves);
-            smallCrackCaves.SetFractalLacunarity(2f);
-            smallCrackCaves.SetFractalGain(0.5f);
-            */
         }
         if (smallCavityCavesSO != null)
         {
@@ -297,10 +238,15 @@ public class World : MonoBehaviour
 
         if (smallWormsSO != null)
         {
-            smallWorms = new FastNoiseLite((int)seed);
-            smallWorms.SetNoiseType(smallWormsSO.noiseType);
-            smallWorms.SetFrequency(smallWormsSO.frequency);
+            smallWorms = FastCreate3dWorm(smallWormsSO);
         }
+
+        if (BaseRockSO != null)
+        {
+            BaseRock = FastCreate3dNoise(BaseRockSO);
+        }
+
+
 
 
 
@@ -313,18 +259,32 @@ public class World : MonoBehaviour
 
 
     }
-    FastNoiseLite FastCreate3dNoise(FastNoise3DSettingsSO caveSO)
+    FastNoiseLite FastCreate3dNoise(FastNoise3DSettingsSO noise3dSO)
     {
-        FastNoiseLite newCave = new FastNoiseLite((int)seed);
-        newCave.SetNoiseType(caveSO.noiseType);
-        newCave.SetFrequency(caveSO.frequency);
+        FastNoiseLite newNoise = new FastNoiseLite((int)seed);
+        newNoise.SetNoiseType(noise3dSO.noiseType);
+        newNoise.SetFrequency(noise3dSO.frequency);
 
-        newCave.SetFractalType(caveSO.fractalType);
-        newCave.SetFractalOctaves(caveSO.octaves);
-        newCave.SetFractalLacunarity(2f);
-        newCave.SetFractalGain(0.5f);
+        newNoise.SetFractalType(noise3dSO.fractalType);
+        newNoise.SetFractalOctaves(noise3dSO.octaves);
+        newNoise.SetFractalLacunarity(2f);
+        newNoise.SetFractalGain(0.5f);
 
-        return newCave;
+        return newNoise;
+    }
+
+    FastNoiseLite FastCreate3dWorm(FastNoiseWormsSO worm3dSO)
+    {
+        FastNoiseLite newWorm = new FastNoiseLite((int)seed);
+        newWorm.SetNoiseType(worm3dSO.noiseType);
+        newWorm.SetFrequency(worm3dSO.frequency);
+
+        newWorm.SetFractalType(worm3dSO.fractalType);
+        newWorm.SetFractalOctaves(worm3dSO.octaves);
+        newWorm.SetFractalLacunarity(2f);
+        newWorm.SetFractalGain(0.5f);
+
+        return newWorm;
     }
     //
     //

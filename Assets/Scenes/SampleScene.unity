@@ -742,11 +742,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minDelay: 1
   maxDelay: 4
-  biomeFrequency: 0.025
-  biomeAmplitude: 100
-  biomeNoiseType: 3
-  biomeOctaves: 3
-  biomeFractalType: 1
+  generateBiomes: 1
+  temperatureMapSO: {fileID: 11400000, guid: c686abbb78459b44fb7c5d806602c145, type: 2}
+  wetMapSO: {fileID: 0}
   planeSettings: {fileID: 11400000, guid: 699c0f7988c1d8d49b1e5e282d188999, type: 2}
   sharpMountainSettings: {fileID: 11400000, guid: adf94fa69e8d70145ba0bf93d0a7dbf9,
     type: 2}
@@ -762,10 +760,6 @@ MonoBehaviour:
   riverThreshold: 7.5
   riverWidth: 0
   generateCaves: 1
-  caveSettingsList:
-  - {fileID: 11400000, guid: 47d5c55f6832a4643a32afde27f4089c, type: 2}
-  - {fileID: 11400000, guid: 14dd7b98a1e5ae84f871b547ba81382a, type: 2}
-  - {fileID: 11400000, guid: 2b38452928700384bb8d10c2f6146c08, type: 2}
   smallCrackCavesSO: {fileID: 11400000, guid: 47d5c55f6832a4643a32afde27f4089c, type: 2}
   smallCavityCavesSO: {fileID: 11400000, guid: 7f8c2681e7cee664999898f70d4f5596, type: 2}
   smallCrackLimiterSO: {fileID: 11400000, guid: b79603e78aa54c547b1e93008cba2bba,
@@ -774,6 +768,8 @@ MonoBehaviour:
   bigCavesSO: {fileID: 11400000, guid: 2b38452928700384bb8d10c2f6146c08, type: 2}
   smallWormsSO: {fileID: 11400000, guid: 8cf5c862b6aea49488292f199e521ad9, type: 2}
   caveBordersSO: {fileID: 11400000, guid: 67e8a2e604deb5d4b826f582c67b5371, type: 2}
+  generateRocks: 1
+  BaseRockSO: {fileID: 11400000, guid: 4465c1aaf5214294d9da156baf5c242c, type: 2}
   noiseScale: 32
   worldSeed: 1234
   seed: 0

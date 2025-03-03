@@ -36,4 +36,10 @@ MonoBehaviour:
     block: {fileID: 11400000, guid: 4b99935e2c207c540a2b97ada72b9eb9, type: 2}
   - name: TaigaGrass
     id: taigaGrass
-    block: {fileID: 11400000, guid: 4b99935e2c207c540a2b97ada72b9eb9, type: 2}
+    block: {fileID: 11400000, guid: c7972e45737e0f1448022f898491627b, type: 2}
+  - name: Granite
+    id: granite
+    block: {fileID: 11400000, guid: d469ee6a1c203e04abc2bfb6f87be636, type: 2}
+  - name: Marble
+    id: marble
+    block: {fileID: 11400000, guid: ec9f9125fcceb284ba74b357ebb5f33c, type: 2}

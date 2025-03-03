@@ -165,16 +165,49 @@ public class Chunk : MonoBehaviour
                     //3D Noises
 
                     bool checkCaves = CheckCaves(worldY, worldX, worldZ);
-                    
+
+
+                    string rockTag = "stone";
+                    var rock = CheckRock(worldX, worldY, worldZ);
+
+                    if (rock == Rock.Stone)
+                    {
+                        rockTag = "stone";
+                    }
+                    if (rock == Rock.Marble)
+                    {
+                        rockTag = "marble";
+                    }
+                    if (rock == Rock.Granite)
+                    {
+                        rockTag = "granite";
+                    }
                     //
 
+
+                    //
+                    string grassTag = "grass";
+                    var grass = CheckBiome(worldX, worldZ);
+
+                    if (grass == Grass.Taiga)
+                    {
+                        grassTag = "taigaGrass";
+                    }
+                    if (grass == Grass.Normal)
+                    {
+                        grassTag = "grass";
+                    }
+                    if (grass == Grass.Savanna)
+                    {
+                        grassTag = "savannaGrass";
+                    }
 
 
                     if (worldY == landscapeHeight && checkCaves)
                     {
                         if (isSharpMountain)
                         {
-                            var block = world.blockTable.GetBlock("stone");
+                            var block = world.blockTable.GetBlock(rockTag);
                             SetBlock(new Vector3Int(x, y, z), block);
                         }
                         else
@@ -186,7 +219,7 @@ public class Chunk : MonoBehaviour
                             }
                             else
                             {
-                                var block = this.world.blockTable.GetBlock("grass");
+                                var block = this.world.blockTable.GetBlock(grassTag);
                                 this.SetBlock(new Vector3Int(x, y, z), block);
                             }
                         }
@@ -196,7 +229,7 @@ public class Chunk : MonoBehaviour
                     {
                         if (isSharpMountain)
                         {
-                            var block = this.world.blockTable.GetBlock("stone");
+                            var block = this.world.blockTable.GetBlock(rockTag);
                             this.SetBlock(new Vector3Int(x, y, z), block);
                         }
                         else
@@ -208,7 +241,7 @@ public class Chunk : MonoBehaviour
 
                     else if (worldY <= (landscapeHeight - 4) && (worldY > -World.MaxWorldHeight) && checkCaves)
                     {
-                        var block = this.world.blockTable.GetBlock("stone");
+                        var block = this.world.blockTable.GetBlock(rockTag);
                         this.SetBlock(new Vector3Int(x, y, z), block);
                     }
 
@@ -321,6 +354,31 @@ public class Chunk : MonoBehaviour
 
         return Mathf.FloorToInt(blendedValue);
     }
+
+
+
+    private enum Grass { Savanna, Normal, Taiga}
+
+    Grass CheckBiome(int worldX, int worldZ)
+    {
+        if (world.generateBiomes && world.temperatureMap != null)
+        {
+            float temperature = ((world.temperatureMap.GetNoise(worldX * world.temperatureMapSO.scaleXZ, worldZ * world.temperatureMapSO.scaleXZ) + 1) / 2) * world.temperatureMapSO.amplitude;
+
+            if (temperature < 0.25f)
+            {
+                return Grass.Taiga;
+            }
+            else if (temperature > 0.75f)
+            {
+                return Grass.Savanna;
+            }
+            else return Grass.Normal;
+        }
+        return Grass.Normal;
+    }
+
+
 
     private enum BlockOrAir { Air, Block}
 
@@ -442,6 +500,35 @@ public class Chunk : MonoBehaviour
         //
     }
 
+
+    //
+    private enum Rock { Granite, Marble, Stone }
+
+    Rock CheckRock(int worldX, int worldY, int worldZ)
+    {
+        if (world.generateRocks && world.BaseRock != null)
+        {
+            return MarbleOrGranite();
+        }
+        else return Rock.Stone;
+
+
+        Rock MarbleOrGranite()
+        {
+            float rockValue = (world.BaseRock.GetNoise(worldX + world.BaseRockSO.scaleXZ, worldY + world.BaseRockSO.scaleY, worldZ + world.BaseRockSO.scaleXZ) + 1) / 2 * world.BaseRockSO.amplitude;
+
+            if (rockValue < 0.5f - world.BaseRockSO.difference)
+            {
+                return Rock.Marble;
+            }
+            else if (rockValue > 0.5f + world.BaseRockSO.difference)
+            {
+                return Rock.Granite;
+            }
+            else return Rock.Stone;
+        }
+    }
+    //
 
 
     bool CheckRivers(int worldX, int worldZ, out int riverDepth, int landscapeHeight)

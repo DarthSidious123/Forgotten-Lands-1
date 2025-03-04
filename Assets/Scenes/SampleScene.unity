@@ -744,7 +744,13 @@ MonoBehaviour:
   maxDelay: 4
   generateBiomes: 1
   temperatureMapSO: {fileID: 11400000, guid: c686abbb78459b44fb7c5d806602c145, type: 2}
-  wetMapSO: {fileID: 0}
+  wetnessMapSO: {fileID: 11400000, guid: 40b0829090e359341bd325bc71f56638, type: 2}
+  defaultBiome: {fileID: 11400000, guid: 3890eb23369617d45889982750f9bf01, type: 2}
+  biomes:
+  - {fileID: 11400000, guid: 30aeb596e43826749b881773e9ba6e6e, type: 2}
+  - {fileID: 11400000, guid: 3890eb23369617d45889982750f9bf01, type: 2}
+  - {fileID: 11400000, guid: 138187e8366eb4a489f92ca6e923c068, type: 2}
+  - {fileID: 11400000, guid: 2441f6a6fd70fb24d9236b01da84106a, type: 2}
   planeSettings: {fileID: 11400000, guid: 699c0f7988c1d8d49b1e5e282d188999, type: 2}
   sharpMountainSettings: {fileID: 11400000, guid: adf94fa69e8d70145ba0bf93d0a7dbf9,
     type: 2}
@@ -775,8 +781,8 @@ MonoBehaviour:
   seed: 0
   seaLevel: 40
   maximumLandHeight: 20
-  renderDistance: 6
-  viewDistance: 10
+  renderDistance: 4
+  viewDistance: 7
   itemTable: {fileID: 11400000, guid: 42cb2e6c15bca4e9fabdccb38d35c4c5, type: 2}
   blockTable: {fileID: 11400000, guid: e86216db9d78a65449d557ba585f8239, type: 2}
   ChunkPrefab: {fileID: 8314088254131425182, guid: 89100dc351b6341a7960b7b590c5db9e,

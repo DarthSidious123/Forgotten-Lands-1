@@ -15,9 +15,12 @@ public class World : MonoBehaviour
 
     public bool generateBiomes = true;
 
-    public FastNoise2DSettingsSO temperatureMapSO, wetMapSO;
+    public FastNoise2DSettingsSO temperatureMapSO, wetnessMapSO;
 
-    public FastNoiseLite temperatureMap, wetMap;
+    public FastNoiseLite temperatureMap, wetnessMap;
+
+    public BiomeSO defaultBiome;
+    public List<BiomeSO> biomes = new List<BiomeSO>();
 
 
     [Space(25)]
@@ -167,12 +170,15 @@ public class World : MonoBehaviour
             riverNoise = FastCreate2dNoise(riverSettings);
         }
 
-
+        //
         if (temperatureMapSO != null)
         {
             temperatureMap = FastCreate2dNoise(temperatureMapSO);
         }
-
+        if (wetnessMapSO != null)
+        {
+            wetnessMap = FastCreate2dNoise(temperatureMapSO);
+        }
 
 
         terrainBlenderNoise = new FastNoiseLite((int)(seed));
@@ -590,5 +596,29 @@ public class World : MonoBehaviour
             //activeChunks.Add(coordinates, chunk);
         }
         return null;
+    }
+
+
+
+
+    public BiomeSO GetBiomeSO(float temperature, float wetness)
+    {
+        if (biomes.Count == 0)
+        {
+            return defaultBiome;
+        }
+        else
+        {
+            foreach (var biome in biomes)
+            {
+                if (biome.temperatureMin <= temperature && biome.temperatureMax >= temperature &&
+                    biome.wetnessMin <= wetness && biome.wetnessMax >= wetness &&
+                    biome.generate)
+                {
+                    return biome;
+                }
+            }
+            return defaultBiome;
+        }
     }
 }

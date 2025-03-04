@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74544e5bb4d0fea4e925e77784790961, type: 3}
+  m_Name: Taiga Meadow
+  m_EditorClassIdentifier: 
+  generate: 1
+  generateSnow: 0
+  topBlock: {fileID: 11400000, guid: c7972e45737e0f1448022f898491627b, type: 2}
+  bottomBlock: {fileID: 11400000, guid: 489dacaa4bf9b47f4b9b819b46fc5b21, type: 2}
+  topBlockThickness: 1
+  bottomBlockThickness: 3
+  forestMin: 0
+  forestMax: 0
+  temperatureMin: 0
+  temperatureMax: 0.4
+  wetnessMin: 0
+  wetnessMax: 1
+  heightMin: 0
+  heightMax: 0

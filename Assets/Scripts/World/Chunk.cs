@@ -186,21 +186,9 @@ public class Chunk : MonoBehaviour
 
 
                     //
-                    string grassTag = "grass";
-                    var grass = CheckBiome(worldX, worldZ);
 
-                    if (grass == Grass.Taiga)
-                    {
-                        grassTag = "taigaGrass";
-                    }
-                    if (grass == Grass.Normal)
-                    {
-                        grassTag = "grass";
-                    }
-                    if (grass == Grass.Savanna)
-                    {
-                        grassTag = "savannaGrass";
-                    }
+                    string grassTag = "grass";
+                    CheckBiome(worldX, worldZ);
 
 
                     if (worldY == landscapeHeight && checkCaves)
@@ -219,7 +207,7 @@ public class Chunk : MonoBehaviour
                             }
                             else
                             {
-                                var block = this.world.blockTable.GetBlock(grassTag);
+                                var block = this.world.blockTable.GetBlock(topBlockTeg);
                                 this.SetBlock(new Vector3Int(x, y, z), block);
                             }
                         }
@@ -234,7 +222,7 @@ public class Chunk : MonoBehaviour
                         }
                         else
                         {
-                            var block = this.world.blockTable.GetBlock("dirt");
+                            var block = this.world.blockTable.GetBlock(bottomBlockTeg);
                             this.SetBlock(new Vector3Int(x, y, z), block);
                         }
                     }
@@ -359,23 +347,37 @@ public class Chunk : MonoBehaviour
 
     private enum Grass { Savanna, Normal, Taiga}
 
-    Grass CheckBiome(int worldX, int worldZ)
-    {
-        if (world.generateBiomes && world.temperatureMap != null)
-        {
-            float temperature = ((world.temperatureMap.GetNoise(worldX * world.temperatureMapSO.scaleXZ, worldZ * world.temperatureMapSO.scaleXZ) + 1) / 2) * world.temperatureMapSO.amplitude;
 
-            if (temperature < 0.25f)
+    private string topBlockTeg, bottomBlockTeg;
+    private int topBlockThickness, bottomBlockThickness;
+
+
+    void CheckBiome(int worldX, int worldZ)
+    {
+        BiomeSO biomeSO = null;
+
+        if (world.generateBiomes)
+        {
+            float temperature = 0;
+            float wetness = 0;
+
+            if (world.temperatureMap != null)
             {
-                return Grass.Taiga;
+                temperature = ((world.temperatureMap.GetNoise(worldX * world.temperatureMapSO.scaleXZ, worldZ * world.temperatureMapSO.scaleXZ) + 1) / 2) * world.temperatureMapSO.amplitude;
             }
-            else if (temperature > 0.75f)
+            if (world.wetnessMap != null)
             {
-                return Grass.Savanna;
+                wetness = ((world.wetnessMap.GetNoise(worldX * world.wetnessMapSO.scaleXZ, worldZ * world.wetnessMapSO.scaleXZ) + 1) / 2) * world.wetnessMapSO.amplitude;
             }
-            else return Grass.Normal;
+
+            biomeSO = world.GetBiomeSO(temperature, wetness);
+
+            topBlockTeg = world.blockTable.GetBlock(biomeSO.topBlock);
+            bottomBlockTeg = world.blockTable.GetBlock(biomeSO.bottomBlock);
+
+            topBlockThickness = biomeSO.topBlockThickness;
+            bottomBlockThickness = biomeSO.bottomBlockThickness;
         }
-        return Grass.Normal;
     }
 
 

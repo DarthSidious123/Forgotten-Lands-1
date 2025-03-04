@@ -16,8 +16,8 @@ MonoBehaviour:
   - name: Air
     id: air
     block: {fileID: 11400000, guid: 7804adfd2a9ddf541a41f1a84ac347ec, type: 2}
-  - name: Grass
-    id: grass
+  - name: TemperateGrass
+    id: temperateGrass
     block: {fileID: 11400000, guid: bd3c90813156543a090b0e5f1c0124e1, type: 2}
   - name: Dirt
     id: dirt

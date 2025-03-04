@@ -20,6 +20,24 @@ public class BlockTableScriptableObject : ScriptableObject
         return block.block as BlockScriptableObject;
     }
 
+    //
+    public string GetBlock(BlockScriptableObject blockSO)
+    {
+        foreach (var block in blocks)
+        {
+            if (block.block == blockSO)
+            {
+                return block.id;
+            }
+        }
+        return null;
+    }
+    //
+
+
+
+
+
     private Texture2D blocksAtlas = null;
     //private Texture2D itemsAtlas = null;
 

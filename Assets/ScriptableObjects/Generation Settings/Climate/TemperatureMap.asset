@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   noiseType: 3
   generate: 1
-  frequency: 0.1
+  frequency: 0.9
   amplitude: 1
-  scaleXZ: 0.2
-  scaleY: 5
-  fractalType: 0
-  octaves: 1
+  scaleXZ: 0.005
+  scaleY: 1
+  fractalType: 1
+  octaves: 2
   offset: 0
   difference: 0

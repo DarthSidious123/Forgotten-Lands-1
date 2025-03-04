@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd221ddee11aa4ed3a130b83dfd1f7f8, type: 3}
-  m_Name: Grass
+  m_Name: TemperateGrass
   m_EditorClassIdentifier: 
   miningPower: 1
   attackPower: 1

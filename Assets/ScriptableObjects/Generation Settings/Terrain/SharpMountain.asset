@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: SharpMountain
   m_EditorClassIdentifier: 
   noiseType: 3
+  generate: 1
   frequency: 0.001
-  amplitude: 500
+  amplitude: 600
   scaleXZ: 50
   scaleY: 50
   fractalType: 1
   octaves: 3
   offset: 0
+  difference: 0

@@ -281,30 +281,26 @@ public class Chunk : MonoBehaviour
         sharpMountainValue = (sharpMountainValue + 1) / 2 * world.sharpMountainSettings.amplitude + world.sharpMountainSettings.offset + world.seaLevel;
 
 
-        float MountainValue = 0;
 
-        if (smoothMountainValue <= sharpMountainValue)
+        float sharpMountBlenderValue = (world.sharpMountAndTerrainBlender.GetNoise(worldX, worldZ) + 1) / 2;
+        float smoothMountBlenderValue = (world.smoothMountAndTerrainBlender.GetNoise(worldX, worldZ) + 1) / 2;
+
+
+        float blendedSmoothMountAndTerrain = Mathf.Lerp(planeValue, smoothMountainValue, smoothMountBlenderValue - world.smoothMountAndTerrainBlenderSO.threshold);
+        float blendedSharpMountAndTerrain = Mathf.Lerp(planeValue, sharpMountainValue, sharpMountBlenderValue - world.sharpMountAndTerrainBlenderSO.threshold);
+
+        float finalHeight = 0;
+
+        if (blendedSharpMountAndTerrain > blendedSmoothMountAndTerrain)
         {
-            MountainValue = sharpMountainValue;
+            isSharpMountain = true;
+            finalHeight = blendedSharpMountAndTerrain;
         }
         else
         {
-            MountainValue = smoothMountainValue;
+            finalHeight = blendedSmoothMountAndTerrain;
         }
-
-
-
-
-
-        float plateauMountainValue = world.plateauMountainNoise.GetNoise(
-            worldX * world.plateauMountainSettings.scaleXZ,
-            worldZ * world.plateauMountainSettings.scaleXZ);
-
-        plateauMountainValue = (plateauMountainValue + 1) / 2 * world.plateauMountainSettings.amplitude + world.seaLevel;
-
-
-
-
+        return Mathf.FloorToInt(finalHeight);
 
         /*
         float mountainBlenderValue = world.mountainBlenderNoise.GetNoise(worldX, worldZ);
@@ -324,23 +320,12 @@ public class Chunk : MonoBehaviour
             finalValue = Mathf.Max(smoothMountainValue, mountainBlendedValue);
         }
         //
-        */
-        
-
-        float terrainBlenderValue = world.terrainBlenderNoise.GetNoise(worldX, worldZ);
+        */      
+        /*
+        float terrainBlenderValue = world.sharpMountAndTerrainBlender.GetNoise(worldX, worldZ);
 
         terrainBlenderValue = (terrainBlenderValue + 1) / 2;
-        
-
-        float blendedValue = Mathf.Lerp(planeValue, MountainValue, terrainBlenderValue - world.mountainThreshold);
-
-        if (smoothMountainValue <= sharpMountainValue && terrainBlenderValue > world.mountainThreshold)
-        {
-            isSharpMountain = true;
-        }
-
-
-        return Mathf.FloorToInt(blendedValue);
+        */
     }
 
 

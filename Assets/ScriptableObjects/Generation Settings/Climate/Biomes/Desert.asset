@@ -23,6 +23,6 @@ MonoBehaviour:
   temperatureMin: 0.6
   temperatureMax: 1
   wetnessMin: 0
-  wetnessMax: 0.5
+  wetnessMax: 0.33
   heightMin: 0
   heightMax: 0

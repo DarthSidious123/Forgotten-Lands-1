@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 74544e5bb4d0fea4e925e77784790961, type: 3}
-  m_Name: Temperate Meadow
+  m_Name: Jungle Meadow
   m_EditorClassIdentifier: 
   generate: 1
   generateSnow: 0
-  topBlock: {fileID: 11400000, guid: bd3c90813156543a090b0e5f1c0124e1, type: 2}
+  topBlock: {fileID: 11400000, guid: ea7a330df6244fd4eae81293b34cff1f, type: 2}
   bottomBlock: {fileID: 11400000, guid: 489dacaa4bf9b47f4b9b819b46fc5b21, type: 2}
   topBlockThickness: 1
   bottomBlockThickness: 3
   forestMin: 0
   forestMax: 0
-  temperatureMin: 0.4
-  temperatureMax: 0.6
-  wetnessMin: 0.4
-  wetnessMax: 0.6
+  temperatureMin: 0.6
+  temperatureMax: 1
+  wetnessMin: 0.66
+  wetnessMax: 1
   heightMin: 0
-  heightMax: 1
+  heightMax: 0

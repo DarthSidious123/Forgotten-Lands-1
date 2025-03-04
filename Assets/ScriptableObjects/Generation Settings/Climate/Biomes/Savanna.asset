@@ -22,7 +22,7 @@ MonoBehaviour:
   forestMax: 0
   temperatureMin: 0.6
   temperatureMax: 1
-  wetnessMin: 0.5
-  wetnessMax: 1
+  wetnessMin: 0.33
+  wetnessMax: 0.66
   heightMin: 0
   heightMax: 0

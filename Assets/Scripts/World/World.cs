@@ -32,10 +32,17 @@ public class World : MonoBehaviour
     public FastNoise2DSettingsSO smoothMountainSettings;
     public FastNoise2DSettingsSO plateauMountainSettings;
 
-    public FastNoiseLite planeNoise, sharpMountainNoise, smoothMountainNoise, plateauMountainNoise, terrainBlenderNoise, mountainBlenderNoise;
+    public FastNoiseLite planeNoise, sharpMountainNoise, smoothMountainNoise, plateauMountainNoise, terrainBlenderNoise;
+    [Space(10)]
 
-    [Range(0f, 1f)]
-    public float terrainBlenderFrequency = 0.5f, mountainBlenderFrequency = 0.5f, mountainThreshold = 0.6f;
+    public BlenderSO sharpMountAndTerrainBlenderSO;
+    public BlenderSO smoothMountAndTerrainBlenderSO;
+
+    public FastNoiseLite sharpMountAndTerrainBlender, smoothMountAndTerrainBlender;
+
+    //[Range(0f, 1f)]
+    //public float terrainBlenderFrequency = 0.5f, mountainBlenderFrequency = 0.5f, mountainThreshold = 0.6f;
+
 
 
     [Space(25)]
@@ -161,9 +168,17 @@ public class World : MonoBehaviour
         }
         if (plateauMountainSettings != null)
         {
-            plateauMountainNoise = new FastNoiseLite((int)(seed));
+            plateauMountainNoise = FastCreate2dNoise(plateauMountainSettings);
         }
-
+        //
+        if (sharpMountAndTerrainBlenderSO != null)
+        {
+            sharpMountAndTerrainBlender = FastCreateBlenderNoise(sharpMountAndTerrainBlenderSO);
+        }
+        if (smoothMountAndTerrainBlenderSO != null)
+        {
+            smoothMountAndTerrainBlender = FastCreateBlenderNoise(smoothMountAndTerrainBlenderSO);
+        }
 
         if (riverSettings != null)
         {
@@ -180,20 +195,6 @@ public class World : MonoBehaviour
             wetnessMap = FastCreate2dNoise(temperatureMapSO);
         }
 
-
-        terrainBlenderNoise = new FastNoiseLite((int)(seed));
-
-        terrainBlenderNoise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
-        terrainBlenderNoise.SetFrequency(terrainBlenderFrequency);
-
-
-
-        mountainBlenderNoise = new FastNoiseLite((int)seed);
-
-        mountainBlenderNoise.SetNoiseType(FastNoiseLite.NoiseType.Perlin);
-        mountainBlenderNoise.SetFrequency(mountainBlenderFrequency);
-
-
     }
 
 
@@ -209,6 +210,20 @@ public class World : MonoBehaviour
 
         newNoise.SetFractalType(noise2dSO.fractalType);
         newNoise.SetFractalOctaves(noise2dSO.octaves);
+        newNoise.SetFractalLacunarity(2);
+        newNoise.SetFractalGain(0.5f);
+
+        return newNoise;
+    }
+
+    FastNoiseLite FastCreateBlenderNoise(BlenderSO blenderSO)
+    {
+        FastNoiseLite newNoise = new FastNoiseLite((int)seed);
+        newNoise.SetNoiseType(blenderSO.noiseType);
+        newNoise.SetFrequency(blenderSO.frequency);
+
+        newNoise.SetFractalType(blenderSO.fractalType);
+        newNoise.SetFractalOctaves(blenderSO.octaves);
         newNoise.SetFractalLacunarity(2);
         newNoise.SetFractalGain(0.5f);
 

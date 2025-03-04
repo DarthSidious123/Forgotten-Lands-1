@@ -12,3 +12,6 @@ public class FastNoise2DSettingsSO : FastNoiseSettingsSO
     [Range(0f, 0.5f)]
     public float difference = 0;
 }
+
+
+

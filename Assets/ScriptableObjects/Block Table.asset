@@ -34,6 +34,9 @@ MonoBehaviour:
   - name: SavannaGrass
     id: savannaGrass
     block: {fileID: 11400000, guid: 4b99935e2c207c540a2b97ada72b9eb9, type: 2}
+  - name: JungleGrass
+    id: jungleGrass
+    block: {fileID: 11400000, guid: ea7a330df6244fd4eae81293b34cff1f, type: 2}
   - name: TaigaGrass
     id: taigaGrass
     block: {fileID: 11400000, guid: c7972e45737e0f1448022f898491627b, type: 2}
